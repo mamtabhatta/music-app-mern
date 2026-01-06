@@ -1,0 +1,77 @@
+/* Main search area */
+.search-main {
+    flex-grow: 1;
+    padding: 30px 40px;
+    background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+    color: #fff;
+    min-height: 100vh;
+    transition: background 0.3s ease;
+}
+
+/* Page title */
+.search-main h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* Message for no results or prompts */
+.search-message {
+    color: #b3b3b3;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Grid layout for song cards */
+.song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+/* Adjust grid for medium screens */
+@media (max-width: 1024px) {
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}
+
+/* Adjust grid for small screens */
+@media (max-width: 768px) {
+    .search-main {
+        padding: 20px;
+    }
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
+    }
+}
+
+/* Optional fade-in animation for cards */
+.song-card {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sidebar adjustments */
+.content-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar-open .search-main {
+    margin-left: 250px; /* sidebar width */
+}
+
+.sidebar-closed .search-main {
+    margin-left: 0;
+}

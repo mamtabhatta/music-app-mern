@@ -1,0 +1,126 @@
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #09090b;
+    color: #fafafa;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background-color: #121212;
+    border-right: 1px solid #27272a;
+    padding: 2rem 1rem;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    padding-left: 0.5rem;
+}
+
+.icon-gold { color: #fbbf24; }
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: #a1a1aa;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s;
+}
+
+.sidebar-nav button:hover, .sidebar-nav button.active {
+    background-color: #27272a;
+    color: white;
+}
+
+.admin-main {
+    flex: 1;
+    padding: 2rem 3rem;
+}
+
+.admin-content-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.admin-card {
+    background: #18181b;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #27272a;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: left;
+    color: #a1a1aa;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    padding: 1rem;
+    border-bottom: 1px solid #27272a;
+}
+
+.admin-table td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid #27272a;
+}
+
+.badge-pending {
+    background: #422006;
+    color: #fbbf24;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-approve {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #71717a;
+    padding: 3rem;
+}

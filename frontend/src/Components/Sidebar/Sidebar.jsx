@@ -1,0 +1,80 @@
+import React, { useEffect, useState } from "react";
+import { FiSearch, FiPlus, FiMusic } from "react-icons/fi";
+import { FaChevronLeft, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { fetchMyPlaylists, createPlaylist, deletePlaylist } from "../../api/playlistApi";
+import "./Sidebar.css";
+
+const Sidebar = () => {
+    const [collapsed, setCollapsed] = useState(false);
+    const [playlists, setPlaylists] = useState([]);
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        loadPlaylists();
+    }, []);
+
+    const loadPlaylists = async () => {
+        if (!token) return;
+        try {
+            const { data } = await fetchMyPlaylists(token);
+            setPlaylists(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Error fetching playlists:", error);
+        }
+    };
+
+    // SEARCH LOGIC: This runs on every render
+    const filteredPlaylists = playlists.filter((p) => {
+        const searchTerm = search.toLowerCase();
+        const playlistTitle = (p.title || "").toLowerCase();
+        return playlistTitle.includes(searchTerm);
+    });
+
+    return (
+        <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+            <div className="library-header">
+                <div className="lib-left" onClick={() => setCollapsed(!collapsed)}>
+                    <div className={`lib-icon-stack ${collapsed ? "active" : ""}`}>
+                        <FaChevronLeft className="toggle-chevron" />
+                        {/* <FiMusic className="lib-music-icon" /> */}
+                    </div>
+                    {!collapsed && <span>Your Library</span>}
+                </div>
+                {!collapsed && (
+                    <button className="plus-btn" onClick={() => {/* handleCreate */ }}>
+                        <FiPlus />
+                    </button>
+                )}
+            </div>
+
+            {!collapsed && (
+                <div className="search-box-sidebar">
+                    <FiSearch className="s-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search in Your Library"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+            )}
+
+            <ul className="playlist-list">
+                {filteredPlaylists.length > 0 ? (
+                    filteredPlaylists.map((playlist) => (
+                        <li key={playlist.id || playlist._id} className="playlist-item">
+
+                        </li>
+                    ))
+                ) : (
+                    !collapsed && <li className="no-results">No playlists found</li>
+                )}
+            </ul>
+        </div>
+    );
+};
+
+export default Sidebar;

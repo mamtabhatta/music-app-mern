@@ -1,0 +1,151 @@
+/* Navbar Main Container */
+.navbar {
+    height: 64px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: white;
+}
+
+/* Left Section: Logo and Brand */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.Music-logo {
+    font-size: 26px;
+    color: #1db954;
+    /* Spotify Green */
+}
+
+.brand-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Center Group: Home Button + Search Bar */
+.navbar-center-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+/* The Circular Home Button */
+.home-button-wrapper {
+    background-color: #1f1f1f;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.home-button-wrapper:hover {
+    background-color: #2a2a2a;
+    transform: scale(1.05);
+}
+
+.home-icon-nav {
+    color: white;
+    font-size: 20px;
+}
+
+/* Search Bar Styling */
+.navbar-center {
+    flex: 1;
+}
+
+.search-bar {
+    background-color: #1f1f1f;
+    border-radius: 500px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid transparent;
+    transition: background-color 0.2s, border 0.2s;
+}
+
+.search-bar:hover {
+    background-color: #2a2a2a;
+    border: 1px solid #333;
+}
+
+.search-bar:focus-within {
+    background-color: #2a2a2a;
+    border: 2px solid #ffffff;
+}
+
+.search-icon-left {
+    color: #b3b3b3;
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.search-bar input::placeholder {
+    color: #757575;
+}
+
+/* Right Section: Icons and Profile */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 140px;
+    justify-content: flex-end;
+}
+
+.nav-icon {
+    font-size: 20px;
+    color: #b3b3b3;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.nav-icon:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .brand-name {
+        display: none;
+    }
+
+    .navbar-center-group {
+        max-width: none;
+        margin: 0 10px;
+    }
+
+    .nav-icon {
+        display: none;
+        /* Hide extra icons on mobile to save space */
+    }
+}

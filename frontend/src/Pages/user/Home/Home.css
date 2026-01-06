@@ -1,0 +1,14 @@
+.home-content {
+  padding: 24px;
+  /* Spotify gradient */
+  background: linear-gradient(to bottom, #1f1f1f, #121212 300px);
+  width: 100%;
+}
+
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  /* Important: space at the bottom so the last row is visible above the footer */
+  padding-bottom: 100px; 
+}

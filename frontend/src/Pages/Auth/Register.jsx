@@ -1,0 +1,95 @@
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
+import "../Auth/Auth.css";
+
+const Register = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+    const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleChange = (e) =>
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        try {
+            const res = await axios.post("http://localhost:5100/api/auth/signup", formData);
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data));
+            navigate("/dashboard");
+        } catch (err) {
+            setError(err.response?.data?.message || "Registration failed");
+        }
+    };
+
+    return (
+        <div className="auth-page">
+            <div className="auth-card">
+                <h2>Create Account</h2>
+                {error && <p className="error-text">{error}</p>}
+
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <FaUser className="icon" />
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Full Name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <FaEnvelope className="icon" />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <FaLock className="icon" />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="toggle-password"
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
+
+                    <button type="submit" className="auth-btn">
+                        Register
+                    </button>
+                </form>
+
+                <p className="switch-text">
+                    Already have an account?{" "}
+                    <Link to="/login" className="link">
+                        Login
+                    </Link>
+                </p>
+            </div>
+        </div>
+    );
+};
+
+export default Register;

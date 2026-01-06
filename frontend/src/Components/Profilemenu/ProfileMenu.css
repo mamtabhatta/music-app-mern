@@ -1,0 +1,33 @@
+.profile-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-menu svg,
+.profile-menu .profile-pic {
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #181818;
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 120px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.dropdown p {
+    color: white;
+    padding: 8px 15px;
+    margin: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown p:hover {
+    background: #282828;
+}

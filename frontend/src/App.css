@@ -1,0 +1,60 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 1. Lock the browser window */
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000;
+}
+
+/* 2. Main Flex Wrapper */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ... keep your reset and app-container code ... */
+
+.content-container {
+  display: flex;
+  flex: 1;
+  /* Ensure the container height is locked to the space above the footer */
+  height: calc(100vh - 90px);
+  padding: 8px;
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* CRITICAL: This makes the sidebar and main area the same height */
+  align-items: stretch;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #121212;
+  border-radius: 8px;
+  flex-shrink: 0;
+
+  /* This ensures it fills the height of the content-container */
+  display: flex;
+  flex-direction: column;
+}
+
+.home-main {
+  flex: 1;
+  min-width: 0;
+  background-color: #121212;
+  border-radius: 8px;
+
+  /* This ensures it fills the height of the content-container */
+  display: flex;
+  flex-direction: column;
+}
