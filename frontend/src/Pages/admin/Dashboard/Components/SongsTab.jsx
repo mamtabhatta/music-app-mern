@@ -3,6 +3,7 @@ import { CheckCircle, Trash2, Music } from 'lucide-react';
 
 const SongsTab = () => {
     const [songs, setSongs] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchSongs();
@@ -17,22 +18,30 @@ const SongsTab = () => {
             setSongs(data.pendingSongs || []);
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleApprove = async (id) => {
-        await fetch(`http://localhost:5100/api/admin/song/approve/${id}`, {
-            method: 'PATCH',
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        fetchSongs();
+        try {
+            await fetch(`http://localhost:5100/api/admin/song/approve/${id}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            fetchSongs();
+        } catch (err) {
+            console.error(err);
+        }
     };
+
+    if (loading) return <div className="empty-msg">Loading songs...</div>;
 
     if (songs.length === 0) {
         return (
             <div className="empty-msg">
                 <Music size={48} />
-                <p>No pending songs for approval.</p>
+                <p>No pending songs found.</p>
             </div>
         );
     }

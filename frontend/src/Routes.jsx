@@ -2,14 +2,25 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-import Login from "../src/Pages/Auth/Login";
-import Register from "../src/Pages/Auth/Register";
-import Home from "../src/Pages/user/Home/Home";
-import Profile from "../src/Pages/user/Profile/Profile";
-import SearchPage from "../src/Components/Search/Search";
+import Login from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
+import Home from "./Pages/user/Home/Home";
+import Profile from "./Pages/user/Profile/Profile";
+import SearchPage from "./Components/Search/Search";
 import SongDetail from "./Pages/user/SongDetail/SongDetail";
-import DiscoverPage from "../src/Pages/user/Discover/Discover";
-import AdminPage from "../src/Pages/admin/Dashboard/AdminPage";
+import DiscoverPage from "./Pages/user/Discover/Discover";
+import AdminPage from "./Pages/admin/Dashboard/AdminPage";
+
+const getRoleFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    try {
+        const decoded = jwtDecode(token);
+        return decoded.role;
+    } catch (error) {
+        return null;
+    }
+};
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem("token");
@@ -17,20 +28,16 @@ const PrivateRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-    const token = localStorage.getItem("token");
-    return !token ? children : <Navigate to="/dashboard" replace />;
+    const role = getRoleFromToken();
+    if (role === "admin") return <Navigate to="/admin" replace />;
+    if (role === "user") return <Navigate to="/dashboard" replace />;
+    return children;
 };
 
 const AdminRoute = ({ children }) => {
-    const token = localStorage.getItem("token");
-    if (!token) return <Navigate to="/login" replace />;
-
-    try {
-        const decoded = jwtDecode(token);
-        return decoded.role === "admin" ? children : <Navigate to="/dashboard" replace />;
-    } catch (error) {
-        return <Navigate to="/login" replace />;
-    }
+    const role = getRoleFromToken();
+    if (role === "admin") return children;
+    return <Navigate to="/dashboard" replace />;
 };
 
 const AppRoutes = () => {
@@ -54,15 +61,6 @@ const AppRoutes = () => {
             />
 
             <Route
-                path="/dashboard"
-                element={
-                    <PrivateRoute>
-                        <Home />
-                    </PrivateRoute>
-                }
-            />
-
-            <Route
                 path="/admin"
                 element={
                     <AdminRoute>
@@ -72,6 +70,14 @@ const AppRoutes = () => {
             />
 
             <Route
+                path="/dashboard"
+                element={
+                    <PrivateRoute>
+                        <Home />
+                    </PrivateRoute>
+                }
+            />
+            <Route
                 path="/discover"
                 element={
                     <PrivateRoute>
@@ -79,7 +85,6 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 }
             />
-
             <Route
                 path="/search"
                 element={
@@ -88,7 +93,6 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 }
             />
-
             <Route
                 path="/profile"
                 element={
@@ -97,7 +101,6 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 }
             />
-
             <Route
                 path="/profile/:id"
                 element={
@@ -106,7 +109,6 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 }
             />
-
             <Route
                 path="/song"
                 element={
@@ -116,6 +118,7 @@ const AppRoutes = () => {
                 }
             />
 
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
     );
