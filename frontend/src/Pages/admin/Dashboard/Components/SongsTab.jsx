@@ -25,11 +25,27 @@ const SongsTab = () => {
 
     const handleApprove = async (id) => {
         try {
-            await fetch(`http://localhost:5100/api/admin/song/approve/${id}`, {
+            const res = await fetch(`http://localhost:5100/api/admin/song/approve/${id}`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
-            fetchSongs();
+            if (res.ok) {
+                fetchSongs();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const res = await fetch(`http://localhost:5100/api/admin/song/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (res.ok) {
+                fetchSongs();
+            }
         } catch (err) {
             console.error(err);
         }
@@ -64,7 +80,7 @@ const SongsTab = () => {
                             <button className="btn-approve" onClick={() => handleApprove(song._id)}>
                                 <CheckCircle size={16} /> Approve
                             </button>
-                            <button className="btn-delete-small">
+                            <button className="btn-delete-small" onClick={() => handleDelete(song._id)}>
                                 <Trash2 size={16} />
                             </button>
                         </td>

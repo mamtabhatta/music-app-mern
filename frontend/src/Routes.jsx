@@ -10,6 +10,7 @@ import SearchPage from "./Components/Search/Search";
 import SongDetail from "./Pages/user/SongDetail/SongDetail";
 import DiscoverPage from "./Pages/user/Discover/Discover";
 import AdminPage from "./Pages/admin/Dashboard/AdminPage";
+import UploadSong from "./Pages/user/UploadSong/UploadSong";
 
 const getRoleFromToken = () => {
     const token = localStorage.getItem("token");
@@ -114,6 +115,13 @@ const AppRoutes = () => {
                 element={
                     <PrivateRoute>
                         <SongDetail />
+                    </PrivateRoute>
+                }
+            />
+            <Route path="/upload"
+                element={
+                    <PrivateRoute>
+                        <UploadSong />
                     </PrivateRoute>
                 }
             />

@@ -16,7 +16,7 @@ const getAllUsers = async (req, res) => {
 
 const getPendingSongs = async (req, res) => {
     try {
-        const pendingSongs = await Song.find({ approved: false });
+        const pendingSongs = await Song.find({ approved: { $ne: true } });
         res.json({ pendingSongs });
     } catch (error) {
         res.status(500).json({ message: error.message });

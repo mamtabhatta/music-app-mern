@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { FaArrowLeft, FaUserCircle, FaMusic, FaPlay, FaEllipsisH } from "react-icons/fa";
+import { FaArrowLeft, FaUserCircle, FaMusic, FaPlay, FaEllipsisH, FaPlus } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./Profile.css";
@@ -124,9 +124,14 @@ const Profile = () => {
               {isFollowing ? "Following" : "Follow"}
             </button>
           ) : (
-            <button className="follow-btn" onClick={() => navigate("/settings")}>
-              Edit Profile
-            </button>
+            <div className="own-profile-actions">
+              <button className="follow-btn" onClick={() => navigate("/settings")}>
+                Edit Profile
+              </button>
+              <button className="upload-btn-link" onClick={() => navigate("/upload")}>
+                <FaPlus /> Upload Song
+              </button>
+            </div>
           )}
           <FaEllipsisH className="more-btn" />
         </div>

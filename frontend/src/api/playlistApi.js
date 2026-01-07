@@ -2,13 +2,11 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5100/api/playlist";
 
-
 export const fetchMyPlaylists = (token) => {
-    return axios.get(API_URL, {
+    return axios.get(`${API_URL}/my`, {
         headers: { Authorization: `Bearer ${token}` },
     });
 };
-
 
 export const getPlaylistById = (playlistId, token) => {
     return axios.get(`${API_URL}/${playlistId}`, {
