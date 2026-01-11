@@ -12,14 +12,13 @@ import { useMusic } from "../../Context/MusicContext";
 import "./FooterPlayer.css";
 
 const FooterPlayer = () => {
-    const { currentSong, isPlaying, playSong, pauseSong, audioRef } = useMusic();
+    const { currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong, audioRef } = useMusic();
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("0:00");
     const [duration, setDuration] = useState("0:00");
 
     useEffect(() => {
         const audio = audioRef.current;
-
         const updateProgress = () => {
             if (audio.duration) {
                 const current = audio.currentTime;
@@ -32,12 +31,14 @@ const FooterPlayer = () => {
 
         audio.addEventListener("timeupdate", updateProgress);
         audio.addEventListener("loadedmetadata", updateProgress);
+        audio.addEventListener("ended", nextSong);
 
         return () => {
             audio.removeEventListener("timeupdate", updateProgress);
             audio.removeEventListener("loadedmetadata", updateProgress);
+            audio.removeEventListener("ended", nextSong);
         };
-    }, [audioRef, currentSong]);
+    }, [audioRef, currentSong, nextSong]);
 
     const formatTime = (time) => {
         if (!time) return "0:00";
@@ -73,11 +74,11 @@ const FooterPlayer = () => {
             <div className="player-center">
                 <div className="controls">
                     <FaRandom className="control-icon" />
-                    <FaStepBackward className="control-icon" />
+                    <FaStepBackward className="control-icon" onClick={prevSong} />
                     <div className="play-pause-wrapper" onClick={isPlaying ? pauseSong : () => playSong(currentSong)}>
                         {isPlaying ? <FaPause /> : <FaPlay className="play-icon-offset" />}
                     </div>
-                    <FaStepForward className="control-icon" />
+                    <FaStepForward className="control-icon" onClick={nextSong} />
                     <FaRedo className="control-icon" />
                 </div>
                 <div className="progress-container">

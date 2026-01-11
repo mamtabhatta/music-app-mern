@@ -1,5 +1,4 @@
 const Playlist = require("../models/playlist");
-const Song = require("../models/song");
 
 const createPlaylist = async (req, res) => {
     try {
@@ -7,7 +6,7 @@ const createPlaylist = async (req, res) => {
         const playlist = await Playlist.create({
             userId: req.user._id,
             title,
-            description,
+            description: description || "",
             songIds: []
         });
         res.status(201).json(playlist);
@@ -18,16 +17,7 @@ const createPlaylist = async (req, res) => {
 
 const getMyPlaylists = async (req, res) => {
     try {
-        const playlists = await Playlist.find({ userId: req.user._id }).populate("songIds");
-        res.json(playlists);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-const getPlaylistsByUserId = async (req, res) => {
-    try {
-        const playlists = await Playlist.find({ userId: req.params.id }).populate("songIds");
+        const playlists = await Playlist.find({ userId: req.user._id });
         res.json(playlists);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -36,7 +26,7 @@ const getPlaylistsByUserId = async (req, res) => {
 
 const getPlaylistById = async (req, res) => {
     try {
-        const playlist = await Playlist.findById(req.params.id).populate("songIds");
+        const playlist = await Playlist.findById(req.params.id);
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
         res.json(playlist);
     } catch (error) {
@@ -47,25 +37,30 @@ const getPlaylistById = async (req, res) => {
 const addSongToPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
-        const playlist = await Playlist.findById(req.params.id);
+        // Convert to string just to be safe
+        const cleanSongId = String(songId);
+
+        const playlist = await Playlist.findByIdAndUpdate(
+            req.params.id,
+            { $addToSet: { songIds: cleanSongId } }, // $addToSet prevents duplicates automatically
+            { new: true }
+        );
+
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
-        if (!playlist.songIds.includes(songId)) {
-            playlist.songIds.push(songId);
-        }
-        await playlist.save();
         res.json(playlist);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
-
 const removeSongFromPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
         const playlist = await Playlist.findById(req.params.id);
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
-        playlist.songIds = playlist.songIds.filter(id => id.toString() !== songId);
+
+        playlist.songIds = playlist.songIds.filter(id => id !== songId);
         await playlist.save();
+
         res.json(playlist);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -74,9 +69,15 @@ const removeSongFromPlaylist = async (req, res) => {
 
 const deletePlaylist = async (req, res) => {
     try {
-        const playlist = await Playlist.findByIdAndDelete(req.params.id);
+        const playlist = await Playlist.findById(req.params.id);
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
-        res.json({ message: "Playlist deleted successfully" });
+
+        if (playlist.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        await Playlist.findByIdAndDelete(req.params.id);
+        res.json({ message: "Deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -85,7 +86,6 @@ const deletePlaylist = async (req, res) => {
 module.exports = {
     createPlaylist,
     getMyPlaylists,
-    getPlaylistsByUserId,
     getPlaylistById,
     addSongToPlaylist,
     removeSongFromPlaylist,

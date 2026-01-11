@@ -17,10 +17,10 @@ const playlistSchema = new mongoose.Schema(
             default: "",
             trim: true,
         },
+        
         songIds: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Song",
+                type: String, 
             },
         ],
     },

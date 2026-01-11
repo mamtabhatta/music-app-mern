@@ -12,7 +12,6 @@ const Home = () => {
     const [trending, setTrending] = useState([]);
     const [forYou, setForYou] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     useEffect(() => {
         const fetchSongs = async () => {
@@ -28,7 +27,7 @@ const Home = () => {
                 setTrending(data.slice(6, 12));
                 setForYou(data.slice(12));
             } catch (err) {
-                console.error("Error fetching songs:", err.message);
+                console.error(err.message);
             } finally {
                 setLoading(false);
             }
@@ -43,9 +42,8 @@ const Home = () => {
         <div className="app-container">
             <Navbar />
             <div className="content-container">
-                <Sidebar onToggle={(open) => setSidebarOpen(open)} />
-                <div className={`home-main ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-
+                <Sidebar />
+                <main className="home-main">
                     <section className="section">
                         <h2>Featured</h2>
                         <div className="song-grid">
@@ -71,9 +69,9 @@ const Home = () => {
                                 <SongCard key={song.id} song={song} />
                             ))}
                         </div>
-                        <Footer />
                     </section>
-                </div>
+                    <Footer />
+                </main>
             </div>
             <FooterPlayer />
         </div>

@@ -11,6 +11,8 @@ import SongDetail from "./Pages/user/SongDetail/SongDetail";
 import DiscoverPage from "./Pages/user/Discover/Discover";
 import AdminPage from "./Pages/admin/Dashboard/AdminPage";
 import UploadSong from "./Pages/user/UploadSong/UploadSong";
+import EditProfile from "./Pages/user/EditProfile/EditProfile";
+import PlaylistDetail from "./Pages/user/PlayList/ PlaylistDetail";
 
 const getRoleFromToken = () => {
     const token = localStorage.getItem("token");
@@ -102,11 +104,28 @@ const AppRoutes = () => {
                     </PrivateRoute>
                 }
             />
+
             <Route
                 path="/profile/:id"
                 element={
                     <PrivateRoute>
                         <Profile />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/playlist/:id"
+                element={
+                    <PrivateRoute>
+                        <PlaylistDetail />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/settings"
+                element={
+                    <PrivateRoute>
+                        <EditProfile />
                     </PrivateRoute>
                 }
             />

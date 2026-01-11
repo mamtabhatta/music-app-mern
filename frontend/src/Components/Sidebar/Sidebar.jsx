@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FiSearch, FiPlus, FiMusic } from "react-icons/fi";
-import { FaChevronLeft, FaTrash } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { fetchMyPlaylists, createPlaylist, deletePlaylist } from "../../api/playlistApi";
+import { fetchMyPlaylists, createPlaylist } from "../../api/playlistApi";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -26,7 +26,18 @@ const Sidebar = () => {
         }
     };
 
-    // SEARCH LOGIC: This runs on every render
+    const handleCreate = async () => {
+        const title = prompt("Enter Playlist Name:");
+        if (!title) return;
+        try {
+            const { data } = await createPlaylist(title, token);
+            setPlaylists([...playlists, data]);
+            navigate(`/playlist/${data._id}`);
+        } catch (error) {
+            alert("Failed to create playlist");
+        }
+    };
+
     const filteredPlaylists = playlists.filter((p) => {
         const searchTerm = search.toLowerCase();
         const playlistTitle = (p.title || "").toLowerCase();
@@ -39,12 +50,11 @@ const Sidebar = () => {
                 <div className="lib-left" onClick={() => setCollapsed(!collapsed)}>
                     <div className={`lib-icon-stack ${collapsed ? "active" : ""}`}>
                         <FaChevronLeft className="toggle-chevron" />
-                        {/* <FiMusic className="lib-music-icon" /> */}
                     </div>
                     {!collapsed && <span>Your Library</span>}
                 </div>
                 {!collapsed && (
-                    <button className="plus-btn" onClick={() => {/* handleCreate */ }}>
+                    <button className="plus-btn" onClick={handleCreate}>
                         <FiPlus />
                     </button>
                 )}
@@ -65,8 +75,20 @@ const Sidebar = () => {
             <ul className="playlist-list">
                 {filteredPlaylists.length > 0 ? (
                     filteredPlaylists.map((playlist) => (
-                        <li key={playlist.id || playlist._id} className="playlist-item">
-
+                        <li
+                            key={playlist._id || playlist.id}
+                            className="playlist-item"
+                            onClick={() => navigate(`/playlist/${playlist._id || playlist.id}`)}
+                        >
+                            <div className="playlist-img-sm">
+                                <FiMusic />
+                            </div>
+                            {!collapsed && (
+                                <div className="playlist-info-sm">
+                                    <span className="p-name">{playlist.title}</span>
+                                    <span className="p-sub">Playlist • {playlist.songIds?.length || 0} songs</span>
+                                </div>
+                            )}
                         </li>
                     ))
                 ) : (

@@ -16,7 +16,7 @@ import { useMusic } from "../../../Context/MusicContext";
 import "./SongDetail.css";
 
 const SongDetail = () => {
-    const { currentSong, isPlaying, playSong, pauseSong, audioRef } = useMusic();
+    const { currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong, audioRef } = useMusic();
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("0:00");
     const [duration, setDuration] = useState("0:00");
@@ -98,11 +98,11 @@ const SongDetail = () => {
 
                     <div className="main-btns">
                         <FaRandom className="secondary-icon" />
-                        <FaStepBackward className="skip-icon" />
+                        <FaStepBackward className="skip-icon" onClick={prevSong} />
                         <button className="spotify-play-pause" onClick={isPlaying ? pauseSong : () => playSong(currentSong)}>
                             {isPlaying ? <FaPause /> : <FaPlay style={{ marginLeft: "4px" }} />}
                         </button>
-                        <FaStepForward className="skip-icon" />
+                        <FaStepForward className="skip-icon" onClick={nextSong} />
                         <FaRedo className="secondary-icon" />
                     </div>
                 </div>

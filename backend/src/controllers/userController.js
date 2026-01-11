@@ -15,13 +15,31 @@ const getMyProfile = async (req, res) => {
 
 const updateMyProfile = async (req, res) => {
     try {
-        const { name, email, password, profilePictureUrl } = req.body;
+        const { name, email, password } = req.body;
         const user = await User.findById(req.user._id);
         if (!user) return res.status(404).json({ message: "User not found" });
 
         if (name) user.name = name;
         if (email) user.email = email;
-        if (profilePictureUrl) user.profilePictureUrl = profilePictureUrl;
+
+
+        if (req.files && req.files.profilePicture) {
+            const file = req.files.profilePicture;
+            const fileName = `avatars/${Date.now()}_${file.name}`;
+
+            const { data, error } = await supabase.storage
+                .from("cover")
+                .upload(fileName, file.data, {
+                    contentType: file.mimetype,
+                    upsert: true,
+                });
+
+            if (error) throw error;
+
+            const publicUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/cover/${data.path}`;
+            user.profilePictureUrl = publicUrl;
+        }
+
         if (password) {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(password, salt);

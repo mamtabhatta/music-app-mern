@@ -6,12 +6,13 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./Search.css";
 
-const Search = () => {
+const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) => {
     const [songs, setSongs] = useState([]);
     const [message, setMessage] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchParams] = useSearchParams();
-    const query = searchParams.get("query") || "";
+
+    const query = isReadOnly ? externalQuery : searchParams.get("query") || "";
 
     useEffect(() => {
         if (!query.trim()) {
@@ -27,21 +28,57 @@ const Search = () => {
                 .or(`title.ilike.%${query}%,artist.ilike.%${query}%,genre.ilike.%${query}%`)
                 .eq("approved", true);
 
-            if (error) {
-                console.error(error);
-                setMessage("Failed to fetch songs");
+            if (error || !data?.length) {
                 setSongs([]);
-            } else if (!data.length) {
                 setMessage("No songs found");
-                setSongs([]);
             } else {
                 setSongs(data);
                 setMessage("");
             }
         };
 
-        fetchSearch();
+        const debounce = setTimeout(fetchSearch, 300);
+        return () => clearTimeout(debounce);
     }, [query]);
+
+    const renderContent = () => (
+        <div className="search-results-container">
+            {message && <p className="search-message">{message}</p>}
+            <div className="song-grid">
+                {songs.map((song, index) => (
+                    <div
+                        key={song.id ?? `${song.title}-${song.artist}-${index}`}
+                        className="song-item-wrapper"
+                    >
+                        <SongCard song={song} />
+                        {onAddSong && (
+                            <button
+                                className="add-to-playlist-btn"
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    // Since 'id' is null in your object, we MUST use 'old_id'
+                                    const songIdentifier = song.old_id || song.id;
+
+                                    if (!songIdentifier) {
+                                        console.error("No ID found for song:", song);
+                                        return;
+                                    }
+
+                                    console.log("Adding song with ID:", songIdentifier);
+                                    onAddSong(songIdentifier);
+                                }}
+                            >
+                                +
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    if (isReadOnly) return renderContent();
 
     return (
         <div className="app-container">
@@ -50,15 +87,7 @@ const Search = () => {
                 <Sidebar onToggle={(open) => setSidebarOpen(open)} />
                 <div className={`search-main ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
                     <h2 className="search-heading">Search Results for "{query}"</h2>
-                    {message && <p className="search-message">{message}</p>}
-                    <div className="song-grid">
-                        {songs.map((song) => (
-                            <SongCard
-                                key={song.id}
-                                song={song} 
-                            />
-                        ))}
-                    </div>
+                    {renderContent()}
                 </div>
             </div>
         </div>
