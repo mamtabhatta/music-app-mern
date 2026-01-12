@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { FiSearch, FiPlus, FiMusic } from "react-icons/fi";
+import { FiSearch, FiPlus, FiMusic, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { fetchMyPlaylists, createPlaylist } from "../../api/playlistApi";
+import { fetchMyPlaylists, createPlaylist, deletePlaylist } from "../../api/playlistApi";
 import "./Sidebar.css";
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [playlists, setPlaylists] = useState([]);
     const [search, setSearch] = useState("");
+    const [isCreating, setIsCreating] = useState(false);
+    const [newTitle, setNewTitle] = useState("");
+    
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
@@ -22,19 +25,39 @@ const Sidebar = () => {
             const { data } = await fetchMyPlaylists(token);
             setPlaylists(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error fetching playlists:", error);
+            console.error(error);
         }
     };
 
-    const handleCreate = async () => {
-        const title = prompt("Enter Playlist Name:");
-        if (!title) return;
+    const handleCreateClick = () => {
+        if (collapsed) setCollapsed(false);
+        setIsCreating(true);
+    };
+
+    const submitNewPlaylist = async (e) => {
+        if (e.key === "Enter" && newTitle.trim() !== "") {
+            try {
+                const { data } = await createPlaylist(newTitle, token);
+                setPlaylists([...playlists, data]);
+                setNewTitle("");
+                setIsCreating(false);
+                navigate(`/playlist/${data._id || data.id}`);
+            } catch (error) {
+                console.error(error);
+            }
+        } else if (e.key === "Escape") {
+            setIsCreating(false);
+            setNewTitle("");
+        }
+    };
+
+    const handleDelete = async (e, id) => {
+        e.stopPropagation();
         try {
-            const { data } = await createPlaylist(title, token);
-            setPlaylists([...playlists, data]);
-            navigate(`/playlist/${data._id}`);
+            await deletePlaylist(id, token);
+            setPlaylists(playlists.filter((p) => (p._id || p.id) !== id));
         } catch (error) {
-            alert("Failed to create playlist");
+            console.error(error);
         }
     };
 
@@ -54,7 +77,7 @@ const Sidebar = () => {
                     {!collapsed && <span>Your Library</span>}
                 </div>
                 {!collapsed && (
-                    <button className="plus-btn" onClick={handleCreate}>
+                    <button className="plus-btn" onClick={handleCreateClick}>
                         <FiPlus />
                     </button>
                 )}
@@ -73,6 +96,21 @@ const Sidebar = () => {
             )}
 
             <ul className="playlist-list">
+                {isCreating && !collapsed && (
+                    <li className="playlist-item creating">
+                        <div className="playlist-img-sm"><FiMusic /></div>
+                        <input
+                            autoFocus
+                            className="inline-create-input"
+                            value={newTitle}
+                            onChange={(e) => setNewTitle(e.target.value)}
+                            onKeyDown={submitNewPlaylist}
+                            onBlur={() => { if(!newTitle) setIsCreating(false); }}
+                            placeholder="Playlist Name..."
+                        />
+                    </li>
+                )}
+
                 {filteredPlaylists.length > 0 ? (
                     filteredPlaylists.map((playlist) => (
                         <li
@@ -84,15 +122,23 @@ const Sidebar = () => {
                                 <FiMusic />
                             </div>
                             {!collapsed && (
-                                <div className="playlist-info-sm">
-                                    <span className="p-name">{playlist.title}</span>
-                                    <span className="p-sub">Playlist • {playlist.songIds?.length || 0} songs</span>
-                                </div>
+                                <>
+                                    <div className="playlist-info-sm">
+                                        <span className="p-name">{playlist.title}</span>
+                                        <span className="p-sub">Playlist • {playlist.songIds?.length || 0} songs</span>
+                                    </div>
+                                    <button 
+                                        className="delete-btn-sidebar" 
+                                        onClick={(e) => handleDelete(e, playlist._id || playlist.id)}
+                                    >
+                                        <FiTrash2 />
+                                    </button>
+                                </>
                             )}
                         </li>
                     ))
                 ) : (
-                    !collapsed && <li className="no-results">No playlists found</li>
+                    !collapsed && !isCreating && <li className="no-results">No playlists found</li>
                 )}
             </ul>
         </div>

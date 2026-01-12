@@ -17,7 +17,7 @@ const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) =>
     useEffect(() => {
         if (!query.trim()) {
             setSongs([]);
-            setMessage("Please enter a song, artist, or genre");
+            // setMessage("Please enter a song, artist, or genre");
             return;
         }
 
@@ -57,7 +57,7 @@ const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) =>
                                 type="button"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    // Since 'id' is null in your object, we MUST use 'old_id'
+                                    //'id' is null in your object, we MUST use 'old_id'
                                     const songIdentifier = song.old_id || song.id;
 
                                     if (!songIdentifier) {

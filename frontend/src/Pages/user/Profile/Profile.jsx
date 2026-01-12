@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { FaArrowLeft, FaUserCircle, FaMusic, FaPlay, FaEllipsisH, FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaUserCircle, FaPlay, FaEllipsisH, FaPlus } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import PlaylistCard from "../../../Components/PlaylistCard/PlaylistCard"; 
 import "./Profile.css";
 
 const Profile = () => {
@@ -140,16 +141,11 @@ const Profile = () => {
             <div className="spotify-grid">
               {playlists.length > 0 ? (
                 playlists.map(pl => (
-                  <div key={pl._id} className="playlist-item-card">
-                    <div className="card-artwork">
-                      <FaMusic size={50} />
-                      <div className="play-hint"><FaPlay /></div>
-                    </div>
-                    <div className="card-details">
-                      <h3>{pl.title}</h3>
-                      <p>Playlist • {user.name}</p>
-                    </div>
-                  </div>
+                  <PlaylistCard 
+                    key={pl._id || pl.id} 
+                    playlist={pl} 
+                    userName={user.name} 
+                  />
                 ))
               ) : (
                 <p className="empty-msg">No public playlists yet.</p>
