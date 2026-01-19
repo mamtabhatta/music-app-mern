@@ -3,6 +3,7 @@ const { protect } = require("../middlewares/authMiddleware");
 const {
     createPlaylist,
     getMyPlaylists,
+    getPlaylistsByUserId,
     getPlaylistById,
     addSongToPlaylist,
     removeSongFromPlaylist,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/", protect, createPlaylist);
 router.get("/my", protect, getMyPlaylists);
+router.get("/user/:userId", protect, getPlaylistsByUserId);
 router.get("/:id", protect, getPlaylistById);
 router.put("/:id/add", protect, addSongToPlaylist);
 router.put("/:id/remove", protect, removeSongFromPlaylist);

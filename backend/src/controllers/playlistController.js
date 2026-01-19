@@ -24,6 +24,16 @@ const getMyPlaylists = async (req, res) => {
     }
 };
 
+const getPlaylistsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const playlists = await Playlist.find({ userId: userId });
+        res.json(playlists || []);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const getPlaylistById = async (req, res) => {
     try {
         const playlist = await Playlist.findById(req.params.id);
@@ -37,12 +47,11 @@ const getPlaylistById = async (req, res) => {
 const addSongToPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
-        // Convert to string just to be safe
         const cleanSongId = String(songId);
 
         const playlist = await Playlist.findByIdAndUpdate(
             req.params.id,
-            { $addToSet: { songIds: cleanSongId } }, // $addToSet prevents duplicates automatically
+            { $addToSet: { songIds: cleanSongId } },
             { new: true }
         );
 
@@ -52,6 +61,7 @@ const addSongToPlaylist = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 const removeSongFromPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
@@ -86,6 +96,7 @@ const deletePlaylist = async (req, res) => {
 module.exports = {
     createPlaylist,
     getMyPlaylists,
+    getPlaylistsByUserId,
     getPlaylistById,
     addSongToPlaylist,
     removeSongFromPlaylist,

@@ -7,6 +7,11 @@ const songSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        artist: {
+            type: String,
+            required: true,
+            // trim: true,
+        },
         artistId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -33,7 +38,7 @@ const songSchema = new mongoose.Schema(
             trim: true,
         },
         duration: {
-            type: Number,
+            type: String,
             required: true,
         },
         uploadDate: {

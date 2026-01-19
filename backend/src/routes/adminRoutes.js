@@ -14,7 +14,7 @@ const { admin } = require("../middlewares/roleMiddleware");
 
 router.get("/users", protect, admin, getAllUsers);
 router.get("/songs/pending", protect, admin, getPendingSongs);
-router.patch("/song/approve/:songId", protect, admin, approveSong);
+router.put("/song/approve/:songId", protect, approveSong);
 router.delete("/song/:songId", protect, admin, removeSong);
 router.delete("/user/:userId", protect, admin, removeUser);
 router.delete("/post/:postId", protect, admin, removePost);

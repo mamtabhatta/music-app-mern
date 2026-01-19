@@ -26,7 +26,7 @@ const SongsTab = () => {
     const handleApprove = async (id) => {
         try {
             const res = await fetch(`http://localhost:5100/api/admin/song/approve/${id}`, {
-                method: 'PATCH',
+                method: 'PUT', 
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) {

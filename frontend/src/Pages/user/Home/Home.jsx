@@ -47,8 +47,12 @@ const Home = () => {
                     <section className="section">
                         <h2>Featured</h2>
                         <div className="song-grid">
-                            {featured.map((song) => (
-                                <SongCard key={song.id} song={song} />
+                            {featured.map((song, index) => (
+                                <SongCard 
+                                    key={`feat-${song.id || index}`} 
+                                    song={song} 
+                                    list={featured} 
+                                />
                             ))}
                         </div>
                     </section>
@@ -56,8 +60,12 @@ const Home = () => {
                     <section className="section">
                         <h2>Trending Now</h2>
                         <div className="song-grid">
-                            {trending.map((song) => (
-                                <SongCard key={song.id} song={song} />
+                            {trending.map((song, index) => (
+                                <SongCard 
+                                    key={`trend-${song.id || index}`} 
+                                    song={song} 
+                                    list={trending} 
+                                />
                             ))}
                         </div>
                     </section>
@@ -65,8 +73,12 @@ const Home = () => {
                     <section className="section">
                         <h2>Made For You</h2>
                         <div className="song-grid">
-                            {forYou.map((song) => (
-                                <SongCard key={song.id} song={song} />
+                            {forYou.map((song, index) => (
+                                <SongCard 
+                                    key={`foryou-${song.id || index}`} 
+                                    song={song} 
+                                    list={forYou} 
+                                />
                             ))}
                         </div>
                     </section>

@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
-    FaPlay,
-    FaPause,
-    FaStepForward,
-    FaStepBackward,
-    FaHeart,
-    FaMinusCircle,
-    FaRandom,
-    FaRedo,
-    FaChevronDown,
-    FaEllipsisH
+    FaPlay, FaPause, FaStepForward, FaStepBackward,
+    FaHeart, FaMinusCircle, FaRandom, FaRedo,
+    FaChevronDown, FaEllipsisH
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useMusic } from "../../../Context/MusicContext";
+import UpNextList from "../../../Components/Upnext/UpNextList";
 import "./SongDetail.css";
 
 const SongDetail = () => {
-    const { currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong, audioRef } = useMusic();
+    const { currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong, audioRef, songs = [] } = useMusic();
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("0:00");
     const [duration, setDuration] = useState("0:00");
@@ -33,7 +27,6 @@ const SongDetail = () => {
                 setDuration(formatTime(total));
             }
         };
-
         audio.addEventListener("timeupdate", updateProgress);
         return () => audio.removeEventListener("timeupdate", updateProgress);
     }, [audioRef, currentSong]);
@@ -52,59 +45,58 @@ const SongDetail = () => {
     if (!currentSong) return null;
 
     return (
-        <div className="spotify-detail-page" style={{ "--bg-color": "#121212" }}>
+        <div className="music-detail-page">
             <div className="header-nav">
-                <button className="nav-btn" onClick={() => navigate(-1)}>
-                    <FaChevronDown />
-                </button>
+                <button className="nav-btn" onClick={() => navigate(-1)}><FaChevronDown /></button>
                 <div className="playing-from">
                     <p>PLAYING FROM PLAYLIST</p>
-                    <span>Your Top Songs 2026</span>
+                    <span>{currentSong.artist} Radio</span>
                 </div>
-                <button className="nav-btn">
-                    <FaEllipsisH />
-                </button>
+                <button className="nav-btn"><FaEllipsisH /></button>
             </div>
 
-            <div className="main-view">
-                <div className="cover-container">
-                    <img src={currentSong.imageUrl} alt={currentSong.title} />
-                </div>
-
-                <div className="song-header-info">
-                    <div className="title-block">
-                        <h1>{currentSong.title}</h1>
-                        <h2>{currentSong.artist}</h2>
+            <div className="content-wrapper">
+                {/* LEFT SIDE: PLAYER */}
+                <div className="main-player-view">
+                    <div className="cover-container">
+                        <img src={currentSong.imageUrl} alt={currentSong.title} />
                     </div>
-                    <div className="header-actions">
-                        <FaMinusCircle className="minus-icon" />
-                        <FaHeart className="heart-icon active" />
-                    </div>
-                </div>
 
-                <div className="player-controls-container">
-                    <div className="slider-box">
-                        <input
-                            type="range"
-                            className="spotify-slider"
-                            value={progress}
-                            onChange={handleSeek}
-                        />
-                        <div className="time-labels">
-                            <span>{currentTime}</span>
-                            <span>{duration}</span>
+                    <div className="song-info-container">
+                        <div className="title-block">
+                            <h1>{currentSong.title}</h1>
+                            <h2>{currentSong.artist}</h2>
+                        </div>
+                        <div className="header-actions">
+                            <FaMinusCircle className="minus-icon" />
+                            <FaHeart className="heart-icon active" />
                         </div>
                     </div>
 
-                    <div className="main-btns">
-                        <FaRandom className="secondary-icon" />
-                        <FaStepBackward className="skip-icon" onClick={prevSong} />
-                        <button className="spotify-play-pause" onClick={isPlaying ? pauseSong : () => playSong(currentSong)}>
-                            {isPlaying ? <FaPause /> : <FaPlay style={{ marginLeft: "4px" }} />}
-                        </button>
-                        <FaStepForward className="skip-icon" onClick={nextSong} />
-                        <FaRedo className="secondary-icon" />
+                    <div className="controls-section">
+                        <div className="slider-box">
+                            <input type="range" className="progress-slider" value={progress} onChange={handleSeek} />
+                            <div className="time-labels">
+                                <span>{currentTime}</span>
+                                <span>{duration}</span>
+                            </div>
+                        </div>
+
+                        <div className="main-btns">
+                            <FaRandom className="secondary-icon" />
+                            <FaStepBackward className="skip-icon" onClick={prevSong} />
+                            <button className="main-play-pause" onClick={() => isPlaying ? pauseSong() : playSong(currentSong)}>
+                                {isPlaying ? <FaPause /> : <FaPlay style={{ marginLeft: "4px" }} />}
+                            </button>
+                            <FaStepForward className="skip-icon" onClick={nextSong} />
+                            <FaRedo className="secondary-icon" />
+                        </div>
                     </div>
+                </div>
+
+                {/* RIGHT SIDE: UP NEXT */}
+                <div className="queue-panel">
+                    <UpNextList songs={songs} currentSong={currentSong} playSong={playSong} />
                 </div>
             </div>
         </div>

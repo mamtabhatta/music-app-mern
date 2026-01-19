@@ -12,8 +12,8 @@ const {
 } = require("../controllers/userController");
 
 router.get("/profile", protect, getMyProfile);
-router.get("/profile/:id", protect, getUserById);
 router.put("/profile", protect, validationMiddleware(updateProfileValidation), updateMyProfile);
-router.post("/upload", protect, validationMiddleware(uploadSongValidation), uploadSong);
+router.post("/upload", protect, uploadSong);
+router.get("/profile/:id", protect, getUserById);
 
 module.exports = router;

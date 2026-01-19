@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { FaArrowLeft, FaUserCircle, FaPlay, FaEllipsisH, FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaUserCircle, FaEllipsisH, FaPlus } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import PlaylistCard from "../../../Components/PlaylistCard/PlaylistCard"; 
+import PlaylistCard from "../../../Components/PlaylistCard/PlaylistCard";
 import "./Profile.css";
 
 const Profile = () => {
@@ -11,9 +11,9 @@ const Profile = () => {
 
   const [user, setUser] = useState(null);
   const [playlists, setPlaylists] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -34,29 +34,37 @@ const Profile = () => {
       });
       setUser(userRes.data);
 
-      const playlistUrl = id
-        ? `http://localhost:5100/api/playlist/user/${id}`
-        : `http://localhost:5100/api/playlist/my`;
+      try {
+        const playlistUrl = id
+          ? `http://localhost:5100/api/playlist/user/${id}`
+          : `http://localhost:5100/api/playlist/my`;
 
-      const playlistRes = await axios.get(playlistUrl, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPlaylists(playlistRes.data || []);
+        const playlistRes = await axios.get(playlistUrl, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setPlaylists(playlistRes.data || []);
+      } catch (plErr) {
+        setPlaylists([]);
+      }
 
-      const statsUrl = id
-        ? `http://localhost:5100/api/social/status/${id}`
-        : `http://localhost:5100/api/social/my-stats`;
+      try {
+        const statsUrl = id
+          ? `http://localhost:5100/api/social/status/${id}`
+          : `http://localhost:5100/api/social/my-stats`;
 
-      const statsRes = await axios.get(statsUrl, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+        const statsRes = await axios.get(statsUrl, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-      setIsFollowing(statsRes.data.isFollowing);
-      setFollowerCount(statsRes.data.followerCount);
-      setFollowingCount(statsRes.data.followingCount);
+        setFollowerCount(statsRes.data.followerCount || 0);
+        setFollowingCount(statsRes.data.followingCount || 0);
+        setIsFollowing(statsRes.data.isFollowing || false);
+      } catch (stErr) {
+        console.warn("Social stats unavailable");
+      }
 
     } catch (err) {
-      console.error(err);
+      console.error("Profile load error:", err);
       setError(true);
     } finally {
       setLoading(false);
@@ -65,7 +73,7 @@ const Profile = () => {
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, [loadData, id]);
 
   const handleFollowToggle = async () => {
     if (!id) return;
@@ -78,7 +86,7 @@ const Profile = () => {
       setIsFollowing(res.data.isFollowing);
       setFollowerCount(prev => res.data.isFollowing ? prev + 1 : prev - 1);
     } catch (err) {
-      console.error(err);
+      console.error("Follow Toggle Error:", err);
     }
   };
 
@@ -90,7 +98,8 @@ const Profile = () => {
       <div className="glass-container">
         <div className="header-overlay">
           <nav className="top-nav">
-            <FaArrowLeft className="back-icon" onClick={() => navigate(-1)} />
+            {/* Changed navigate(-1) to navigate("/") */}
+            <FaArrowLeft className="back-icon" onClick={() => navigate("/")} />
           </nav>
 
           <div className="hero-content">
@@ -115,7 +124,6 @@ const Profile = () => {
 
         <main className="main-content">
           <div className="action-bar">
-            <button className="play-button-large"><FaPlay /></button>
             {id ? (
               <button
                 className={isFollowing ? "follow-btn following" : "follow-btn"}
@@ -141,10 +149,10 @@ const Profile = () => {
             <div className="spotify-grid">
               {playlists.length > 0 ? (
                 playlists.map(pl => (
-                  <PlaylistCard 
-                    key={pl._id || pl.id} 
-                    playlist={pl} 
-                    userName={user.name} 
+                  <PlaylistCard
+                    key={pl._id || pl.id}
+                    playlist={pl}
+                    userName={user.name}
                   />
                 ))
               ) : (

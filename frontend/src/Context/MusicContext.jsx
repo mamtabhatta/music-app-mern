@@ -8,15 +8,15 @@ export const MusicProvider = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
 
-    // Create the audio reference that FooterPlayer needs
+    
     const audioRef = useRef(new Audio());
 
     const playSong = (song, fullList = queue) => {
         if (song) {
-            // If it's a new song, update the source
+            
             if (currentSong?.old_id !== song.old_id) {
                 setCurrentSong(song);
-                audioRef.current.src = song.audioUrl; // Make sure your song object has this
+                audioRef.current.src = song.audioUrl;
             }
 
             if (fullList !== queue) setQueue(fullList);
@@ -34,14 +34,14 @@ export const MusicProvider = ({ children }) => {
         audioRef.current.pause();
     };
 
-    const nextSong = () => { // Renamed from playNext to match Footer
+    const nextSong = () => { 
         if (currentIndex < queue.length - 1) {
             const nextIndex = currentIndex + 1;
             playSong(queue[nextIndex]);
         }
     };
 
-    const prevSong = () => { // Renamed from playPrev to match Footer
+    const prevSong = () => {
         if (currentIndex > 0) {
             const prevIndex = currentIndex - 1;
             playSong(queue[prevIndex]);
@@ -56,7 +56,8 @@ export const MusicProvider = ({ children }) => {
             pauseSong,
             nextSong,
             prevSong,
-            audioRef
+            audioRef,
+            songs:queue
         }}>
             {children}
         </MusicContext.Provider>

@@ -1,76 +1,166 @@
+:root {
+  --bg-black: #050505;
+  --accent-white: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.05);
+}
+
 .upload-page {
-    background: #121212;
-    min-height: 100vh;
-    color: white;
-    padding: 20px;
+  min-height: 100vh;
+  background: var(--bg-black);
+  color: var(--accent-white);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.top-nav {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.back-icon {
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.back-icon:hover {
+  opacity: 1;
+}
+
+.top-nav h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
 .upload-form {
-    max-width: 600px;
-    margin: 40px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .file-inputs-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 .file-box {
-    background: #282828;
-    border: 2px dashed #535353;
-    padding: 30px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+  background: var(--glass-bg);
+  border: 1px dashed var(--glass-border);
+  border-radius: 16px;
+  height: 180px;
+  display: flex;
+  transition: all 0.3s ease;
 }
 
 .file-box:hover {
-    border-color: #1DB954;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .file-box label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 20px;
+  text-align: center;
+}
+
+.file-box .icon {
+  font-size: 32px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.file-box span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  word-break: break-all;
+}
+
+.text-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .text-inputs input {
-    width: 100%;
-    background: #3e3e3e;
-    border: none;
-    padding: 15px;
-    border-radius: 4px;
-    color: white;
-    margin-bottom: 15px;
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: white;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+.text-inputs input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
 .submit-btn {
-    background: #1DB954;
-    color: black;
-    font-weight: bold;
-    padding: 15px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+  background: var(--accent-white);
+  color: black;
+  border: none;
+  border-radius: 50px;
+  padding: 18px;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
 }
 
 .submit-btn:disabled {
-    opacity: 0.5;
+  background: #444;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .success-msg {
-    color: #1DB954;
-    text-align: center;
+  text-align: center;
+  color: #00ff88;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .file-inputs-container {
+    grid-template-columns: 1fr;
+  }
 }
