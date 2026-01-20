@@ -1,15 +1,9 @@
-:root {
-  --bg-black: #050505;
-  --accent-white: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --input-bg: rgba(255, 255, 255, 0.05);
-}
+/* Upload Page CSS - Fixed Icon Alignment */
 
 .upload-page {
   min-height: 100vh;
-  background: var(--bg-black);
-  color: var(--accent-white);
+  background: transparent;
+  color: var(--text-main);
   font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
@@ -29,16 +23,19 @@
 .back-icon {
   font-size: 20px;
   cursor: pointer;
+  color: var(--text-main);
   opacity: 0.6;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
 }
 
 .back-icon:hover {
   opacity: 1;
+  color: var(--accent-cyan);
+  transform: translateX(-5px);
 }
 
 .top-nav h2 {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -1px;
 }
@@ -49,6 +46,11 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  background: var(--glass-bg);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
 }
 
 .file-inputs-container {
@@ -58,41 +60,53 @@
 }
 
 .file-box {
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px dashed var(--glass-border);
   border-radius: 16px;
   height: 180px;
-  display: flex;
+  position: relative;
+  overflow: hidden; /* Ensures icons don't spill out */
   transition: all 0.3s ease;
 }
 
 .file-box:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: var(--glow-cyan);
+  border-color: var(--accent-cyan);
+  border-style: solid; /* Changes dash to solid on hover for a "locked-in" look */
 }
 
+/* --- THE FIX: Centering and Balancing --- */
 .file-box label {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: center;    /* Horizontal Center */
+  justify-content: center; /* Vertical Center */
   cursor: pointer;
   padding: 20px;
   text-align: center;
+  gap: 12px; /* Consistent space between icon and text */
 }
 
 .file-box .icon {
-  font-size: 32px;
-  margin-bottom: 15px;
-  opacity: 0.5;
+  font-size: 40px; /* Slightly larger for better balance */
+  margin: 0;      /* Removed margin-bottom to rely on flex gap */
+  color: var(--accent-cyan);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .file-box span {
   font-size: 13px;
-  font-weight: 500;
-  color: #888;
+  font-weight: 600;
+  color: var(--text-main);
+  opacity: 0.7;
+  max-width: 100%;
   word-break: break-all;
+  line-height: 1.4;
 }
 
 .text-inputs {
@@ -102,25 +116,25 @@
 }
 
 .text-inputs input {
-  background: var(--input-bg);
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 16px 20px;
-  color: white;
+  color: var(--text-main);
   font-size: 15px;
   transition: all 0.3s;
 }
 
 .text-inputs input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px var(--glow-cyan);
 }
 
 .submit-btn {
-  background: var(--accent-white);
-  color: black;
+  background: var(--accent-cyan);
+  color: #000;
   border: none;
   border-radius: 50px;
   padding: 18px;
@@ -131,32 +145,22 @@
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
   margin-top: 10px;
+  box-shadow: 0 10px 20px var(--glow-cyan);
 }
 
 .submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  background: #ffffff;
+  box-shadow: 0 15px 30px var(--glow-cyan);
 }
 
 .submit-btn:disabled {
-  background: #444;
+  background: #333;
+  color: #666;
   cursor: not-allowed;
-  transform: none;
-}
-
-.success-msg {
-  text-align: center;
-  color: #00ff88;
-  font-size: 14px;
-  font-weight: 500;
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  box-shadow: none;
 }
 
 @media (max-width: 600px) {

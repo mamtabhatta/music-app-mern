@@ -1,11 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 .auth-page {
     height: 100vh;
@@ -13,78 +6,84 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #050505;
+    /* Uses a dark base to let your home page mesh/glows show through if transparent */
+    background: #050508; 
     position: relative;
     overflow: hidden;
-}
-
-/* Cute soft glows in background */
-.auth-page::before {
-    content: "";
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
-    top: -10%;
-    right: -5%;
+    padding: 20px;
 }
 
 .auth-card {
-    width: 90%;
-    max-width: 420px;
-    background: rgba(18, 18, 18, 0.7);
-    backdrop-filter: blur(30px) saturate(150%);
-    border-radius: 32px;
-    /* Very rounded/cute corners */
-    padding: 3.5rem 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+    /* Matches the glass effect of your Home Sidebar/Cards */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(35px) saturate(180%);
+    -webkit-backdrop-filter: blur(35px) saturate(180%);
+    border-radius: 28px;
+    padding: 50px 35px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
     text-align: center;
+    color: white;
+}
+
+/* The Big Music Note Icon - Matched to Home Accent */
+.auth-card::before {
+    content: '♫';
+    display: block;
+    font-size: 70px;
+    margin-bottom: 15px;
+    color: var(--accent-cyan);
+    filter: drop-shadow(0 0 15px var(--glow-cyan));
+    opacity: 1;
 }
 
 .auth-card h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 2.5rem;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 35px;
+    text-align: center;
     letter-spacing: -1px;
+    color: #fff;
 }
 
-/* Input groups fixed */
 .input-group {
     position: relative;
-    margin-bottom: 1.25rem;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
 }
 
 .input-group input {
     width: 100%;
-    padding: 18px 50px;
-    /* Spacious padding */
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.03);
-    color: #fff;
-    font-size: 1rem;
+    padding: 16px 16px 16px 50px;
+    /* Darker glass for inputs to create depth */
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    color: white;
+    font-size: 15px;
     outline: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 
 .input-group input:focus {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.01);
+    border-color: var(--accent-cyan);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px var(--glow-cyan);
 }
 
-/* Icons inside the input properly */
-.icon {
+.input-group .icon {
     position: absolute;
     left: 18px;
-    color: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.input-group input:focus + .icon {
+    color: var(--accent-cyan);
 }
 
 .toggle-password {
@@ -92,68 +91,85 @@
     right: 18px;
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
+    font-size: 16px;
     display: flex;
     align-items: center;
-    padding: 5px;
-    transition: 0.2s;
 }
 
 .toggle-password:hover {
-    color: #fff;
+    color: var(--accent-cyan);
 }
 
-/* Advanced cute button */
+/* The White Action Button - Matches Home Button Style */
 .auth-btn {
     width: 100%;
-    padding: 18px;
+    padding: 16px;
     border: none;
-    border-radius: 20px;
+    border-radius: 50px;
     background: #ffffff;
     color: #000;
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
-    margin-top: 1.5rem;
-    transition: all 0.3s ease;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .auth-btn:hover {
+    background: var(--accent-cyan);
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15);
-    background: #f0f0f0;
+    box-shadow: 0 10px 25px var(--glow-cyan);
 }
 
-.auth-btn:active {
-    transform: translateY(0);
+.auth-btn:disabled {
+    opacity: 0.5;
+    background: #ccc;
+}
+
+/* Arrow indicator to match the screenshot */
+.auth-btn::after {
+    content: '›';
+    font-size: 24px;
+    line-height: 0;
+    margin-left: 4px;
+    margin-top: -2px;
 }
 
 .error-text {
-    background: rgba(255, 107, 107, 0.1);
-    color: #ff6b6b;
+    background: rgba(255, 80, 80, 0.1);
+    color: #ff5050;
     padding: 12px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 80, 80, 0.2);
 }
 
 .switch-text {
-    margin-top: 2rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.9rem;
+    margin-top: 30px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .switch-text .link {
-    color: #fff;
+    color: var(--accent-cyan);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     margin-left: 5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: 0.3s;
 }
 
 .switch-text .link:hover {
-    border-bottom: 1px solid #fff;
+    color: #fff;
+    text-shadow: 0 0 10px var(--glow-cyan);
 }

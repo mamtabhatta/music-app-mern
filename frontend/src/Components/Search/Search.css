@@ -1,75 +1,98 @@
-/* Main search area */
 .search-main {
     flex-grow: 1;
     padding: 30px 40px;
-    background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
-    color: #fff;
+    /* Transparent background to show the home mesh gradient */
+    background: transparent;
+    color: var(--text-main);
     min-height: 100vh;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-/* Page title */
 .search-main h2 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 25px;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+    /* Soft glow for the title */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
 }
 
-/* Message for no results or prompts */
 .search-message {
-    color: #b3b3b3;
+    color: var(--text-main);
+    opacity: 0.5;
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-weight: 500;
 }
 
-/* Grid layout for song cards */
 .song-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 30px;
 }
 
-/* Adjust grid for medium screens */
-@media (max-width: 1024px) {
-    .song-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 20px;
-    }
-}
-
-/* Adjust grid for small screens */
-@media (max-width: 768px) {
-    .search-main {
-        padding: 20px;
-    }
-    .song-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
-    }
-}
-
-/* Optional fade-in animation for cards */
+/* Advanced Song Card Animation Logic */
 .song-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.4s forwards;
+    transform: translateY(20px);
+    animation: magicalReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition: all 0.4s ease;
 }
 
-@keyframes fadeInUp {
+/* Staggered animation for a more "Advanced" feel */
+.song-card:nth-child(1) { animation-delay: 0.1s; }
+.song-card:nth-child(2) { animation-delay: 0.15s; }
+.song-card:nth-child(3) { animation-delay: 0.2s; }
+.song-card:nth-child(4) { animation-delay: 0.25s; }
+
+@keyframes magicalReveal {
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Sidebar adjustments */
+.song-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--glow-cyan);
+    transform: translateY(-8px);
+}
+
+/* Responsive Sharpness */
+@media (max-width: 1024px) {
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-main {
+        padding: 20px;
+    }
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    .search-main h2 {
+        font-size: 24px;
+    }
+}
+
+/* Sidebar context fixes */
 .content-container {
     display: flex;
     min-height: 100vh;
 }
 
 .sidebar-open .search-main {
-    margin-left: 250px; /* sidebar width */
+    margin-left: 250px;
 }
 
 .sidebar-closed .search-main {

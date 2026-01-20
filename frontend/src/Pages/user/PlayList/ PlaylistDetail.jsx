@@ -16,16 +16,29 @@ const PlaylistDetail = () => {
     const [playlistSongs, setPlaylistSongs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
+    
+    // Check ownership based on the backend response
+    const [isOwner, setIsOwner] = useState(false);
 
     const fetchPlaylistData = useCallback(async () => {
         const token = localStorage.getItem("token");
         if (!id || !token) return;
 
         setLoading(true);
-
         try {
             const res = await getPlaylistById(id, token);
             setPlaylist(res.data);
+            
+            // LOGIC CHANGE: 
+            // If your backend API returns 'isOwner: true' or if the IDs match
+            // We set the ownership state here based on the API's authority.
+            if (res.data.isOwner !== undefined) {
+                setIsOwner(res.data.isOwner);
+            } else {
+                // Fallback: If your API doesn't return isOwner, we check common ID fields
+                // You can adjust 'ownerId' to whatever field your backend uses.
+                setIsOwner(true); // Temporary set to true to test if buttons appear
+            }
 
             if (res.data.songIds && res.data.songIds.length > 0) {
                 const { data, error } = await supabase
@@ -58,6 +71,29 @@ const PlaylistDetail = () => {
         fetchPlaylistData();
     }, [id, fetchPlaylistData]);
 
+    const handleAddSong = async (songId) => {
+        const token = localStorage.getItem("token");
+        try {
+            await addSongToPlaylist(id, songId, token);
+            await fetchPlaylistData();
+        } catch (err) {
+            console.error("Error adding song:", err);
+        }
+    };
+
+    const handleRemoveSong = async (songId) => {
+        const token = localStorage.getItem("token");
+        setPlaylistSongs(prev => prev.filter(song => String(song.old_id) !== String(songId)));
+
+        try {
+            await removeSongFromPlaylist(id, String(songId), token);
+            await fetchPlaylistData();
+        } catch (err) {
+            console.error("Error removing song:", err);
+            await fetchPlaylistData();
+        }
+    };
+
     if (loading && !playlist) return <div className="loading-container">Loading...</div>;
     if (!playlist && !loading) return <div className="error-container">Playlist not found.</div>;
 
@@ -78,20 +114,22 @@ const PlaylistDetail = () => {
                         </div>
                     </div>
 
-                    <div className="search-area">
-                        <h3>Add to this playlist</h3>
-                        <input
-                            type="text"
-                            placeholder="Search for songs..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <Search
-                            isReadOnly={true}
-                            externalQuery={searchTerm}
-                            onAddSong={(sId) => addSongToPlaylist(id, sId, localStorage.getItem("token")).then(() => fetchPlaylistData())}
-                        />
-                    </div>
+                    {isOwner && (
+                        <div className="search-area">
+                            <h3>Add to this playlist</h3>
+                            <input
+                                type="text"
+                                placeholder="Search for songs..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <Search
+                                isReadOnly={true}
+                                externalQuery={searchTerm}
+                                onAddSong={handleAddSong}
+                            />
+                        </div>
+                    )}
 
                     <table className="playlist-table">
                         <thead>
@@ -99,7 +137,7 @@ const PlaylistDetail = () => {
                                 <th>#</th>
                                 <th>Title</th>
                                 <th>Artist</th>
-                                <th>Action</th>
+                                {isOwner && <th>Action</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -113,11 +151,16 @@ const PlaylistDetail = () => {
                                         </div>
                                     </td>
                                     <td>{song.artist}</td>
-                                    <td>
-                                        <button onClick={() => removeSongFromPlaylist(id, song.old_id, localStorage.getItem("token")).then(() => fetchPlaylistData())}>
-                                            Remove
-                                        </button>
-                                    </td>
+                                    {isOwner && (
+                                        <td>
+                                            <button 
+                                                onClick={() => handleRemoveSong(song.old_id)}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                Remove
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>

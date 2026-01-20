@@ -1,17 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap');
 
-:root {
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --spotify-green: #1db954;
-    --input-bg: rgba(255, 255, 255, 0.05);
-}
-
 .edit-profile-page {
     min-height: 100vh;
-    background: radial-gradient(circle at top right, #2a1a2a, #121212 50%),
-        radial-gradient(circle at bottom left, #1a1a2e, #121212 50%);
-    color: #fff;
+    /* Removed solid gradients to match Home Page mesh background */
+    background: transparent; 
+    color: var(--text-main);
     font-family: "Inter", sans-serif;
     display: flex;
     justify-content: center;
@@ -28,7 +21,7 @@
     border: 1px solid var(--glass-border);
     border-radius: 28px;
     padding: 40px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .edit-header {
@@ -41,6 +34,7 @@
 .edit-header h2 {
     font-size: 24px;
     font-weight: 700;
+    color: var(--text-main);
 }
 
 .avatar-upload-section {
@@ -57,17 +51,20 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--glass-border);
+    box-shadow: 0 0 20px var(--glow-cyan);
 }
 
 .upload-label {
     font-size: 14px;
-    color: var(--spotify-green);
+    color: var(--accent-cyan);
     cursor: pointer;
     font-weight: 600;
+    transition: 0.2s;
 }
 
 .upload-label:hover {
-    text-decoration: underline;
+    color: var(--text-main);
+    text-shadow: 0 0 10px var(--glow-cyan);
 }
 
 .form-group {
@@ -77,7 +74,8 @@
 .form-group label {
     display: block;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-main);
+    opacity: 0.6;
     margin-bottom: 8px;
     font-weight: 500;
 }
@@ -85,10 +83,10 @@
 .glass-input {
     width: 100%;
     padding: 12px 16px;
-    background: var(--input-bg);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
-    border-radius: 10px;
-    color: #fff;
+    border-radius: 12px;
+    color: var(--text-main);
     font-family: inherit;
     font-size: 15px;
     outline: none;
@@ -96,8 +94,9 @@
 }
 
 .glass-input:focus {
-    border-color: var(--spotify-green);
+    border-color: var(--accent-cyan);
     background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px var(--glow-cyan);
 }
 
 .save-btn {
@@ -105,20 +104,23 @@
     padding: 14px;
     margin-top: 10px;
     border-radius: 50px;
-    background: var(--spotify-green);
+    background: var(--accent-cyan);
     color: #000;
     font-weight: 700;
     border: none;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--glow-cyan);
 }
 
 .save-btn:hover {
-    transform: scale(1.02);
-    background: #1ed760;
+    transform: translateY(-2px);
+    background: #ffffff;
+    box-shadow: 0 8px 25px var(--glow-cyan);
 }
 
 .save-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
+    filter: grayscale(1);
 }

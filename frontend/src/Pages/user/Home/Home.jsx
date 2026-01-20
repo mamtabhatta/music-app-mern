@@ -24,8 +24,8 @@ const Home = () => {
                 if (error) throw error;
 
                 setFeatured(data.slice(0, 6));
-                setTrending(data.slice(6, 12));
-                setForYou(data.slice(12));
+                setTrending(data.slice(18, 24));
+                setForYou(data.slice(10, 17));
             } catch (err) {
                 console.error(err.message);
             } finally {
@@ -48,10 +48,10 @@ const Home = () => {
                         <h2>Featured</h2>
                         <div className="song-grid">
                             {featured.map((song, index) => (
-                                <SongCard 
-                                    key={`feat-${song.id || index}`} 
-                                    song={song} 
-                                    list={featured} 
+                                <SongCard
+                                    key={`feat-${song.id || index}`}
+                                    song={song}
+                                    list={featured}
                                 />
                             ))}
                         </div>
@@ -61,10 +61,10 @@ const Home = () => {
                         <h2>Trending Now</h2>
                         <div className="song-grid">
                             {trending.map((song, index) => (
-                                <SongCard 
-                                    key={`trend-${song.id || index}`} 
-                                    song={song} 
-                                    list={trending} 
+                                <SongCard
+                                    key={`trend-${song.id || index}`}
+                                    song={song}
+                                    list={trending}
                                 />
                             ))}
                         </div>
@@ -74,10 +74,10 @@ const Home = () => {
                         <h2>Made For You</h2>
                         <div className="song-grid">
                             {forYou.map((song, index) => (
-                                <SongCard 
-                                    key={`foryou-${song.id || index}`} 
-                                    song={song} 
-                                    list={forYou} 
+                                <SongCard
+                                    key={`foryou-${song.id || index}`}
+                                    song={song}
+                                    list={forYou}
                                 />
                             ))}
                         </div>

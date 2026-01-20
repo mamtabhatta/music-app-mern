@@ -1,101 +1,116 @@
 .playlist-detail-main {
     flex: 1;
-    background: linear-gradient(to bottom, #404040 0%, #121212 40%, #121212 100%);
-    color: white;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-main);
     padding: 32px;
     overflow-y: auto;
-    height: calc(100vh - 90px);
+    /* Perfect fit: Viewport minus Navbar (85px) and Footer (90px) */
+    height: calc(100vh - var(--navbar-height) - var(--footer-height) - 32px);
+    display: flex;
+    flex-direction: column;
 }
-
 .playlist-header {
     display: flex;
-    align-items: flex-end;
-    gap: 30px;
-    padding: 40px 0 30px 0;
+    align-items: flex-end; /* Keeps text and image aligned at the bottom */
+    gap: 24px;
+    padding: 20px 0 30px 0;
 }
 
 .playlist-cover {
-    width: 232px;
-    height: 232px;
-    min-width: 232px;
-    background: linear-gradient(135deg, #282828 0%, #1a1a1a 100%);
+    /* Made smaller to look more proportional */
+    width: 190px; 
+    height: 190px;
+    min-width: 190px;
+    
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
-    border-radius: 8px;
+    
+    /* Layered shadows for depth */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(34, 211, 238, 0.05);
+    
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .playlist-cover:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.8);
+    transform: translateY(-5px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(34, 211, 238, 0.2);
 }
 
 .default-cover-icon {
-    font-size: 100px;
-    color: #535353;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
-}
-
-.header-text {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.playlist-badge {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
+    /* Scaled down to match new box size */
+    font-size: 70px; 
+    color: var(--accent-cyan);
+    opacity: 0.3;
 }
 
 .header-text h1 {
-    font-size: 80px;
+    /* Slightly reduced font size to match the smaller cover */
+    font-size: 56px; 
     margin: 0;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: -2px;
-    line-height: 1;
+    line-height: 1.1;
+}
+.playlist-badge {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
 }
 
 .header-text p {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-main);
+    opacity: 0.6;
     font-size: 14px;
     margin-top: 8px;
 }
 
 .search-area {
     margin: 40px 0;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     padding: 24px;
-    border-radius: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
 }
 
 .search-area h3 {
     font-size: 20px;
     margin-bottom: 20px;
     font-weight: 700;
+    color: var(--text-main);
 }
 
 .search-area input {
     width: 100%;
     max-width: 450px;
-    padding: 14px 20px;
-    background: #2a2a2a;
-    border: 1px solid transparent;
-    border-radius: 30px;
-    color: white;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 500px;
+    color: var(--text-main);
     font-size: 14px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    /* Added margin-bottom to create a gap between search bar and cards */
+    margin-bottom: 24px; 
+    display: block;
 }
 
 .search-area input:focus {
-    background: #3e3e3e;
-    border-color: #777;
+    border-color: var(--accent-cyan);
+    background: rgba(0, 0, 0, 0.4);
     outline: none;
+    box-shadow: 0 0 15px var(--glow-cyan);
 }
 
 .playlist-table {
@@ -106,8 +121,9 @@
 
 .playlist-table th {
     text-align: left;
-    color: #b3b3b3;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    opacity: 0.5;
+    border-bottom: 1px solid var(--glass-border);
     padding: 12px;
     font-size: 11px;
     letter-spacing: 1px;
@@ -115,17 +131,17 @@
 }
 
 .song-row {
-    border-radius: 4px;
     transition: background 0.2s ease;
 }
 
 .song-row:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .song-row td {
-    padding: 8px 12px;
+    padding: 12px;
     font-size: 14px;
+    color: var(--text-main);
 }
 
 .song-content-fix {
@@ -140,26 +156,30 @@
     border-radius: 4px;
     object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
 }
 
 .song-title {
-    font-weight: 500;
-    color: #fff;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 .playlist-table button {
     background: transparent;
-    color: #b3b3b3;
+    color: var(--text-main);
+    opacity: 0.5;
     border: none;
     font-size: 12px;
     cursor: pointer;
     padding: 8px;
-    border-radius: 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
 .playlist-table button:hover {
     color: #ff5c5c;
     background: rgba(255, 92, 92, 0.1);
+    opacity: 1;
 }
 
 .loading-container {
@@ -167,7 +187,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #121212;
-    color: white;
+    background: transparent;
+    color: var(--text-main);
     font-size: 20px;
 }

@@ -1,89 +1,109 @@
 .pl-card {
-  background: #181818;
-  padding: 16px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px;
+  border-radius: 24px;
+  /* Thin high-contrast border for that "Sharp Glass" look */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
   width: 100%;
-  max-width: 200px;
+  max-width: 190px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .pl-card:hover {
-  background-color: #282828;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
 }
 
 .pl-card-image-container {
   position: relative;
   aspect-ratio: 1 / 1;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  margin-bottom: 14px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .pl-card-img {
   width: 100%;
   height: 100%;
-  border-radius: 4px;
   object-fit: cover;
   display: block;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pl-card-placeholder {
-  width: 100%;
-  height: 100%;
-  background: #282828;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #b3b3b3;
+.pl-card:hover .pl-card-img {
+  transform: scale(1.1) rotate(1deg);
 }
+
 
 .pl-play-badge {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
-  width: 48px;
-  height: 48px;
-  background-color: #1db954;
-  border: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  width: 50px;
+  height: 50px;
+  background: white;
+  color: black;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
-  font-size: 18px;
   opacity: 0;
-  transform: translateY(8px);
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 3;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
 .pl-card:hover .pl-play-badge {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(-50%, -50%) scale(1);
 }
 
-.pl-play-badge:hover {
-  transform: scale(1.05);
-  background-color: #1ed760;
+.pl-play-badge svg, .pl-play-badge i {
+  font-size: 20px;
+  margin-left: 3px;
 }
 
 .pl-title {
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
+  color: #ffffffde;
+  font-size: 15px;
+  font-weight: 800;
   margin: 0 0 4px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: -0.3px;
 }
 
 .pl-subtitle {
-  color: #b3b3b3;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+
+.pl-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.pl-card:hover::before {
+  opacity: 1;
 }

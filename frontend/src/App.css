@@ -1,49 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --glass-bg: rgba(15, 15, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glow-cyan: rgba(34, 211, 238, 0.15);
+  --glow-purple: rgba(139, 92, 246, 0.15);
+  --accent-cyan: #22d3ee;
+  --text-main: #f8fafc;
+  --navbar-height: 85px;
+  --footer-height: 90px;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 1. Lock the browser window */
-html,
-body,
-#root {
+html, body, #root {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background-color: #000;
+  background: 
+    radial-gradient(at 0% 0%, var(--glow-cyan) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--glow-purple) 0px, transparent 50%),
+    #050508; 
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
 }
 
-/* 2. Main Flex Wrapper */
 .app-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-/* ... keep your reset and app-container code ... */
-
 .content-container {
   display: flex;
   flex: 1;
-  /* Ensure the container height is locked to the space above the footer */
-  height: calc(100vh - 90px);
-  padding: 8px;
-  gap: 8px;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  /* CRITICAL: This makes the sidebar and main area the same height */
+  height: calc(100vh - var(--navbar-height) - var(--footer-height));
+  padding: 16px;
+  gap: 16px;
   align-items: stretch;
+}
+
+.sidebar, .home-main {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 }
 
 .sidebar {
   width: 280px;
-  background-color: #121212;
-  border-radius: 8px;
   flex-shrink: 0;
-
-  /* This ensures it fills the height of the content-container */
   display: flex;
   flex-direction: column;
 }
@@ -51,10 +63,16 @@ body,
 .home-main {
   flex: 1;
   min-width: 0;
-  background-color: #121212;
-  border-radius: 8px;
-
-  /* This ensures it fills the height of the content-container */
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+}
+
+.home-main::-webkit-scrollbar {
+  width: 5px;
+}
+.home-main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
