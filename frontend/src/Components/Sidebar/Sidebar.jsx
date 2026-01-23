@@ -2,32 +2,24 @@ import React, { useEffect, useState } from "react";
 import { FiSearch, FiPlus, FiMusic, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { fetchMyPlaylists, createPlaylist, deletePlaylist } from "../../api/playlistApi";
+import { createPlaylist, deletePlaylist } from "../../api/playlistApi";
+import { useMusic } from "../../Context/MusicContext";
 import "./Sidebar.css";
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const [playlists, setPlaylists] = useState([]);
     const [search, setSearch] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     
+    //sidebar listens to the brain
+    const { playlists, setPlaylists, fetchUserPlaylists } = useMusic();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        loadPlaylists();
+        fetchUserPlaylists();
     }, []);
-
-    const loadPlaylists = async () => {
-        if (!token) return;
-        try {
-            const { data } = await fetchMyPlaylists(token);
-            setPlaylists(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const handleCreateClick = () => {
         if (collapsed) setCollapsed(false);
@@ -90,7 +82,7 @@ const Sidebar = () => {
                         type="text"
                         placeholder="Search in Your Library"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
             )}
@@ -111,35 +103,27 @@ const Sidebar = () => {
                     </li>
                 )}
 
-                {filteredPlaylists.length > 0 ? (
-                    filteredPlaylists.map((playlist) => (
-                        <li
-                            key={playlist._id || playlist.id}
-                            className="playlist-item"
-                            onClick={() => navigate(`/playlist/${playlist._id || playlist.id}`)}
-                        >
-                            <div className="playlist-img-sm">
-                                <FiMusic />
-                            </div>
-                            {!collapsed && (
-                                <>
-                                    <div className="playlist-info-sm">
-                                        <span className="p-name">{playlist.title}</span>
-                                        <span className="p-sub">Playlist • {playlist.songIds?.length || 0} songs</span>
-                                    </div>
-                                    <button 
-                                        className="delete-btn-sidebar" 
-                                        onClick={(e) => handleDelete(e, playlist._id || playlist.id)}
-                                    >
-                                        <FiTrash2 />
-                                    </button>
-                                </>
-                            )}
-                        </li>
-                    ))
-                ) : (
-                    !collapsed && !isCreating && <li className="no-results">No playlists found</li>
-                )}
+                {filteredPlaylists.map((playlist) => (
+                    <li
+                        key={playlist._id || playlist.id}
+                        className="playlist-item"
+                        onClick={() => navigate(`/playlist/${playlist._id || playlist.id}`)}
+                    >
+                        <div className="playlist-img-sm"><FiMusic /></div>
+                        {!collapsed && (
+                            <>
+                                <div className="playlist-info-sm">
+                                    <span className="p-name">{playlist.title}</span>
+                                    
+                                    <span className="p-sub">Playlist • {playlist.songIds?.length || playlist.songs?.length || 0} songs</span>
+                                </div>
+                                <button className="delete-btn-sidebar" onClick={(e) => handleDelete(e, playlist._id || playlist.id)}>
+                                    <FiTrash2 />
+                                </button>
+                            </>
+                        )}
+                    </li>
+                ))}
             </ul>
         </div>
     );

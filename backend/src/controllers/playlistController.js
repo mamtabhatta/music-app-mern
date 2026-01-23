@@ -36,9 +36,11 @@ const getPlaylistsByUserId = async (req, res) => {
 
 const getPlaylistById = async (req, res) => {
     try {
-        const playlist = await Playlist.findById(req.params.id);
+        const playlist = await Playlist.findById(req.params.id).populate("songIds");
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
-        res.json(playlist);
+        
+        const isOwner = playlist.userId.toString() === req.user._id.toString();
+        res.json({ ...playlist._doc, isOwner });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -47,15 +49,23 @@ const getPlaylistById = async (req, res) => {
 const addSongToPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
-        const cleanSongId = String(songId);
+        const playlistId = req.params.id;
 
-        const playlist = await Playlist.findByIdAndUpdate(
-            req.params.id,
-            { $addToSet: { songIds: cleanSongId } },
-            { new: true }
-        );
+        const playlist = await Playlist.findById(playlistId);
 
-        if (!playlist) return res.status(404).json({ message: "Playlist not found" });
+        if (!playlist) {
+            return res.status(404).json({ message: "Playlist not found" });
+        }
+
+        if (playlist.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        if (!playlist.songIds.includes(songId)) {
+            playlist.songIds.push(songId);
+            await playlist.save();
+        }
+
         res.json(playlist);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -66,9 +76,12 @@ const removeSongFromPlaylist = async (req, res) => {
     try {
         const { songId } = req.body;
         const playlist = await Playlist.findById(req.params.id);
-        if (!playlist) return res.status(404).json({ message: "Playlist not found" });
 
-        playlist.songIds = playlist.songIds.filter(id => id !== songId);
+        if (!playlist) {
+            return res.status(404).json({ message: "Playlist not found" });
+        }
+
+        playlist.songIds = playlist.songIds.filter(id => id.toString() !== songId.toString());
         await playlist.save();
 
         res.json(playlist);
@@ -81,11 +94,9 @@ const deletePlaylist = async (req, res) => {
     try {
         const playlist = await Playlist.findById(req.params.id);
         if (!playlist) return res.status(404).json({ message: "Playlist not found" });
-
         if (playlist.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: "Unauthorized" });
         }
-
         await Playlist.findByIdAndDelete(req.params.id);
         res.json({ message: "Deleted successfully" });
     } catch (error) {

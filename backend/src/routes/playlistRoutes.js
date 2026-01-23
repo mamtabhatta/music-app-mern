@@ -1,5 +1,10 @@
-const express = require("express");
-const { protect } = require("../middlewares/authMiddleware");
+import express from "express";
+import playlistController from "../controllers/playlistController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+
+const router = express.Router();
+
+
 const {
     createPlaylist,
     getMyPlaylists,
@@ -8,9 +13,7 @@ const {
     addSongToPlaylist,
     removeSongFromPlaylist,
     deletePlaylist
-} = require("../controllers/playlistController");
-
-const router = express.Router();
+} = playlistController;
 
 router.post("/", protect, createPlaylist);
 router.get("/my", protect, getMyPlaylists);
@@ -20,4 +23,4 @@ router.put("/:id/add", protect, addSongToPlaylist);
 router.put("/:id/remove", protect, removeSongFromPlaylist);
 router.delete("/:id", protect, deletePlaylist);
 
-module.exports = router;
+export default router;

@@ -7,7 +7,7 @@ const SongCard = ({ song, list = [] }) => {
     const { playSong, pauseSong, currentSong, isPlaying } = useMusic();
     const navigate = useNavigate();
 
-    const isThisSongPlaying = isPlaying && currentSong?.id === song.id;
+    const isThisSongPlaying = isPlaying && currentSong?._id === song._id;
 
     const handleCardClick = () => {
         playSong(song, list);
@@ -26,7 +26,7 @@ const SongCard = ({ song, list = [] }) => {
     return (
         <div className="song-card" onClick={handleCardClick}>
             <div className="song-cover">
-                <img src={song.imageUrl || song.coverImageUrl} alt={song.title} />
+                <img src={song.coverImageUrl || song.imageUrl} alt={song.title} />
                 <div className="overlay">
                     <button className="play-btn" onClick={handleTogglePlay}>
                         {isThisSongPlaying ? "❚❚" : "▶"}

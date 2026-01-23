@@ -1,5 +1,4 @@
 const Song = require("../models/song");
-const supabase = require("../../config/supabase");
 
 const getAllSongs = async (req, res) => {
     try {
@@ -17,15 +16,6 @@ const getFeaturedSongs = async (req, res) => {
         const songs = await Song.aggregate([
             { $match: { approved: true } },
             { $sample: { size: 6 } },
-            {
-                $project: {
-                    _id: 1,
-                    title: 1,
-                    artistId: 1,
-                    coverImageUrl: 1,
-                    songUrl: 1,
-                },
-            },
         ]);
         res.json(songs);
     } catch (error) {
@@ -38,15 +28,6 @@ const getMadeForYouSongs = async (req, res) => {
         const songs = await Song.aggregate([
             { $match: { approved: true } },
             { $sample: { size: 4 } },
-            {
-                $project: {
-                    _id: 1,
-                    title: 1,
-                    artistId: 1,
-                    coverImageUrl: 1,
-                    songUrl: 1,
-                },
-            },
         ]);
         res.json(songs);
     } catch (error) {
@@ -58,8 +39,7 @@ const getTrendingSongs = async (req, res) => {
     try {
         const songs = await Song.find({ approved: true })
             .sort({ playCount: -1 })
-            .limit(4)
-            .select("_id title artistId coverImageUrl songUrl playCount");
+            .limit(4);
         res.json(songs);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -90,15 +70,30 @@ const searchSongs = async (req, res) => {
             approved: true,
             $or: [
                 { title: { $regex: query, $options: "i" } },
+                { artist: { $regex: query, $options: "i" } },
                 { genre: { $regex: query, $options: "i" } },
             ],
-        }).populate("artistId", "name profilePictureUrl");
+        }).populate("artistId", "name");
 
-        res.json(songs);
+        const formattedSongs = songs.map(song => {
+            const s = song.toObject();
+            return {
+                ...s,
+                _id: s._id,
+                artist: (typeof s.artist === 'string' && !/^[0-9a-fA-F]{24}$/.test(s.artist)) 
+                    ? s.artist 
+                    : (s.artistId?.name || "Unknown Artist"),
+                coverImageUrl: s.coverImageUrl || s.imageUrl,
+                songUrl: s.songUrl || s.audioUrl
+            };
+        });
+
+        res.json(formattedSongs);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 module.exports = {
     getAllSongs,

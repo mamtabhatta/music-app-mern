@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     FaPlay, FaPause, FaStepForward, FaStepBackward,
     FaHeart, FaMinusCircle, FaRandom, FaRedo,
@@ -16,30 +16,51 @@ const SongDetail = () => {
     const [duration, setDuration] = useState("0:00");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const audio = audioRef.current;
-        const updateProgress = () => {
-            if (audio.duration) {
-                const current = audio.currentTime;
-                const total = audio.duration;
-                setProgress((current / total) * 100);
-                setCurrentTime(formatTime(current));
-                setDuration(formatTime(total));
-            }
-        };
-        audio.addEventListener("timeupdate", updateProgress);
-        return () => audio.removeEventListener("timeupdate", updateProgress);
-    }, [audioRef, currentSong]);
-
     const formatTime = (time) => {
-        const min = Math.floor(time / 60);
-        const sec = Math.floor(time % 60);
-        return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+        if (!time || isNaN(time) || time === Infinity) return "0:00";
+        const mins = Math.floor(time / 60);
+        const secs = Math.floor(time % 60);
+        return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
     };
 
+    const syncWithAudio = useCallback(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        const total = audio.duration;
+        const current = audio.currentTime;
+
+        if (total && !isNaN(total)) {
+            setProgress((current / total) * 100);
+            setCurrentTime(formatTime(current));
+            setDuration(formatTime(total));
+        }
+    }, [audioRef]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        audio.addEventListener("timeupdate", syncWithAudio);
+        audio.addEventListener("loadedmetadata", syncWithAudio);
+        audio.addEventListener("durationchange", syncWithAudio);
+        audio.addEventListener("ended", nextSong);
+
+        if (audio.readyState >= 1) syncWithAudio();
+
+        return () => {
+            audio.removeEventListener("timeupdate", syncWithAudio);
+            audio.removeEventListener("loadedmetadata", syncWithAudio);
+            audio.removeEventListener("durationchange", syncWithAudio);
+            audio.removeEventListener("ended", nextSong);
+        };
+    }, [audioRef, currentSong, nextSong, syncWithAudio]);
+
     const handleSeek = (e) => {
+        if (!audioRef.current || !audioRef.current.duration) return;
         const seekTime = (e.target.value / 100) * audioRef.current.duration;
         audioRef.current.currentTime = seekTime;
+        setProgress(e.target.value);
     };
 
     if (!currentSong) return null;
@@ -56,10 +77,9 @@ const SongDetail = () => {
             </div>
 
             <div className="content-wrapper">
-                {/* LEFT SIDE: PLAYER */}
                 <div className="main-player-view">
                     <div className="cover-container">
-                        <img src={currentSong.imageUrl} alt={currentSong.title} />
+                        <img src={currentSong.coverImageUrl || currentSong.imageUrl} alt={currentSong.title} />
                     </div>
 
                     <div className="song-info-container">
@@ -75,10 +95,10 @@ const SongDetail = () => {
 
                     <div className="controls-section">
                         <div className="slider-box">
-                            <input type="range" className="progress-slider" value={progress} onChange={handleSeek} />
+                            <input type="range" className="progress-slider" value={progress} onChange={handleSeek} min="0" max="100" />
                             <div className="time-labels">
                                 <span>{currentTime}</span>
-                                <span>{duration}</span>
+                                <span>{duration === "0:00" ? "..." : duration}</span>
                             </div>
                         </div>
 
@@ -94,7 +114,6 @@ const SongDetail = () => {
                     </div>
                 </div>
 
-                {/* RIGHT SIDE: UP NEXT */}
                 <div className="queue-panel">
                     <UpNextList songs={songs} currentSong={currentSong} playSong={playSong} />
                 </div>

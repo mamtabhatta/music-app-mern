@@ -17,10 +17,20 @@ const FooterPlayer = () => {
     const [currentTime, setCurrentTime] = useState("0:00");
     const [duration, setDuration] = useState("0:00");
 
+    const formatTime = (time) => {
+        if (!time || isNaN(time)) return "0:00";
+        let totalSeconds = time > 10000 ? time / 1000 : time;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    };
+
     useEffect(() => {
         const audio = audioRef.current;
+        if (!audio) return;
+
         const updateProgress = () => {
-            if (audio.duration) {
+            if (audio.duration && !isNaN(audio.duration)) {
                 const current = audio.currentTime;
                 const total = audio.duration;
                 setProgress((current / total) * 100);
@@ -40,23 +50,18 @@ const FooterPlayer = () => {
         };
     }, [audioRef, currentSong, nextSong]);
 
-    const formatTime = (time) => {
-        if (!time) return "0:00";
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    };
-
     const handleSeek = (e) => {
         const audio = audioRef.current;
+        if (!audio || !audio.duration) return;
         const newTime = (e.target.value / 100) * audio.duration;
         audio.currentTime = newTime;
         setProgress(e.target.value);
     };
 
     const handleVolumeChange = (e) => {
-        const vol = e.target.value / 100;
-        audioRef.current.volume = vol;
+        if (audioRef.current) {
+            audioRef.current.volume = e.target.value / 100;
+        }
     };
 
     if (!currentSong) return null;
@@ -64,7 +69,11 @@ const FooterPlayer = () => {
     return (
         <div className="footer-player">
             <div className="player-left">
-                <img src={currentSong.imageUrl} alt={currentSong.title} className="song-img" />
+                <img 
+                    src={currentSong.coverImageUrl || currentSong.imageUrl || currentSong.songUrl} 
+                    alt={currentSong.title} 
+                    className="song-img" 
+                />
                 <div className="song-details">
                     <h4>{currentSong.title}</h4>
                     <p>{currentSong.artist}</p>

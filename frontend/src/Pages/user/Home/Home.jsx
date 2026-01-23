@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "../../../Components/Navbar/Navbar";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import FooterPlayer from "../../../Components/FooterPlayer/FooterPlayer";
-import { supabase } from "../../../Lib/SupabaseClient";
 import SongCard from "../../../Components/Songcard/Songcard";
 import Footer from '../../../Components/Footer/Footer';
 import "./Home.css";
@@ -16,16 +16,12 @@ const Home = () => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const { data, error } = await supabase
-                    .from("songs")
-                    .select("*")
-                    .eq("approved", true);
-
-                if (error) throw error;
+                const res = await axios.get("http://localhost:5100/api/songs");
+                const data = res.data;
 
                 setFeatured(data.slice(0, 6));
-                setTrending(data.slice(18, 24));
-                setForYou(data.slice(10, 17));
+                setTrending(data.slice(6,12));
+                setForYou(data.slice(12));
             } catch (err) {
                 console.error(err.message);
             } finally {
@@ -47,9 +43,9 @@ const Home = () => {
                     <section className="section">
                         <h2>Featured</h2>
                         <div className="song-grid">
-                            {featured.map((song, index) => (
+                            {featured.map((song) => (
                                 <SongCard
-                                    key={`feat-${song.id || index}`}
+                                    key={song._id}
                                     song={song}
                                     list={featured}
                                 />
@@ -60,9 +56,9 @@ const Home = () => {
                     <section className="section">
                         <h2>Trending Now</h2>
                         <div className="song-grid">
-                            {trending.map((song, index) => (
+                            {trending.map((song) => (
                                 <SongCard
-                                    key={`trend-${song.id || index}`}
+                                    key={song._id}
                                     song={song}
                                     list={trending}
                                 />
@@ -73,9 +69,9 @@ const Home = () => {
                     <section className="section">
                         <h2>Made For You</h2>
                         <div className="song-grid">
-                            {forYou.map((song, index) => (
+                            {forYou.map((song) => (
                                 <SongCard
-                                    key={`foryou-${song.id || index}`}
+                                    key={song._id}
                                     song={song}
                                     list={forYou}
                                 />

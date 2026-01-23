@@ -1,54 +1,49 @@
 import fs from "fs";
+import path from "path";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import { createClient } from "@supabase/supabase-js";
+import Song from "../backend/src/models/song.js"; // Your Mongoose model
 
 dotenv.config();
 
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
-);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-// Read JSON file containing song info (with genre)
-const songs = JSON.parse(fs.readFileSync("./songsInfo.json", "utf-8"));
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => console.log("❌ MongoDB connection error:", err));
 
-async function uploadSongs() {
+
+const songs = JSON.parse(fs.readFileSync(path.resolve("../backend/supabase_songs_backup.json"), "utf-8"));
+
+async function saveMetadataOnly() {
+    const fakeArtistId = new mongoose.Types.ObjectId(); 
     for (const song of songs) {
         try {
-            // Read local files
-            const audio = fs.readFileSync(`songs/${song.audioFile}`);
-            const image = fs.readFileSync(`covers/${song.imageFile}`);
-
-            // Upload audio
-            await supabase.storage.from("music").upload(song.audioFile, audio, { upsert: true });
-
-            // Upload image
-            await supabase.storage.from("cover").upload(song.imageFile, image, { upsert: true });
-
-            // Get public URLs
-            const { data: audioData } = supabase.storage.from("music").getPublicUrl(song.audioFile);
-            const { data: imageData } = supabase.storage.from("cover").getPublicUrl(song.imageFile);
-            const audioUrl = audioData.publicUrl;
-            const imageUrl = imageData.publicUrl;
-
-            // Insert metadata into Supabase table
-            const { error: insertError } = await supabase.from("songs").insert({
+            await Song.create({
                 title: song.title,
                 artist: song.artist,
-                genre: song.genre,
+                artistId: fakeArtistId,
+                album: song.album || "",
+                genre: song.genre || "",
                 duration: song.duration,
-                audioUrl,
-                imageUrl,
-                approved: true
+                songUrl: song.audioUrl,       
+                coverImageUrl: song.imageUrl, 
+                approved: song.approved,
+                isPublic: song.approved
             });
 
-            if (insertError) throw insertError;
+            console.log("✅ Saved metadata:", song.title);
 
-            console.log("✅ Uploaded:", song.title);
         } catch (err) {
             console.log("❌ Error:", song.title, err.message);
         }
     }
+    console.log("🎉 All metadata saved to MongoDB");
+    mongoose.disconnect();
 }
 
-uploadSongs();
+saveMetadataOnly();

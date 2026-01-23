@@ -1,20 +1,20 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const passport = require("passport");
-const passportConfig = require("./config/passport");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import passport from "passport";
+import passportConfig from "./config/passport.js";
 
+import authRoutes from "./src/routes/authRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
+import songRoutes from "./src/routes/songRoutes.js";
+import followRoutes from "./src/routes/followRoutes.js";
+import playlistRoutes from "./src/routes/playlistRoutes.js";
+import postRoutes from "./src/routes/postRoutes.js";
+import commentRoutes from "./src/routes/commentRoutes.js";
 
-const authRoutes = require("./src/routes/authRoutes");
-const userRoutes = require("./src/routes/userRoutes");
-const adminRoutes = require("./src/routes/adminRoutes");
-const songRoutes = require("./src/routes/songRoutes");
-const followRoutes = require("./src/routes/followRoutes");
-const playlistRoutes = require("./src/routes/playlistRoutes");
-const postRoutes = require("./src/routes/postRoutes");
-const commentRoutes = require("./src/routes/commentRoutes");
-const fileUpload = require("express-fileupload");
-const cors = require("cors");
+import fileUpload from "express-fileupload";
+import cors from "cors";
 
 dotenv.config();
 connectDB();
@@ -26,7 +26,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 app.use(express.json());

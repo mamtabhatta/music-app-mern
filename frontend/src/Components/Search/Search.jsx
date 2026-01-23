@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { supabase } from "../../Lib/SupabaseClient";
+import axios from "axios";
 import SongCard from "../../Components/Songcard/Songcard";
 import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
@@ -9,7 +9,6 @@ import "./Search.css";
 const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) => {
     const [songs, setSongs] = useState([]);
     const [message, setMessage] = useState("");
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchParams] = useSearchParams();
 
     const query = isReadOnly ? externalQuery : searchParams.get("query") || "";
@@ -17,23 +16,32 @@ const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) =>
     useEffect(() => {
         if (!query.trim()) {
             setSongs([]);
-            // setMessage("Please enter a song, artist, or genre");
             return;
         }
 
         const fetchSearch = async () => {
-            const { data, error } = await supabase
-                .from("songs")
-                .select("*")
-                .or(`title.ilike.%${query}%,artist.ilike.%${query}%,genre.ilike.%${query}%`)
-                .eq("approved", true);
+            try {
+                const token = localStorage.getItem("token");
+                const response = await axios.get(
+                    `http://localhost:5100/api/songs/search?query=${encodeURIComponent(query)}`,
+                    { headers: { Authorization: token ? `Bearer ${token}` : "" } }
+                );
+                
+                const normalized = response.data.map(song => ({
+                    ...song,
+                    _id: song._id || song.old_id,
+                    coverImageUrl: song.coverImageUrl || song.imageUrl,
+                    songUrl: song.songUrl || song.audioUrl,
+                    artist: (typeof song.artist === 'string' && !/^[0-9a-fA-F]{24}$/.test(song.artist)) 
+                        ? song.artist 
+                        : (song.artistId?.name || "Unknown Artist")
+                }));
 
-            if (error || !data?.length) {
+                setSongs(normalized);
+                setMessage(normalized.length === 0 ? "No songs found" : "");
+            } catch (error) {
                 setSongs([]);
-                setMessage("No songs found");
-            } else {
-                setSongs(data);
-                setMessage("");
+                setMessage("Search failed");
             }
         };
 
@@ -41,33 +49,17 @@ const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) =>
         return () => clearTimeout(debounce);
     }, [query]);
 
-    const renderContent = () => (
+    const renderResults = () => (
         <div className="search-results-container">
             {message && <p className="search-message">{message}</p>}
             <div className="song-grid">
-                {songs.map((song, index) => (
-                    <div
-                        key={song.id ?? `${song.title}-${song.artist}-${index}`}
-                        className="song-item-wrapper"
-                    >
-                        <SongCard song={song} />
+                {songs.map((song) => (
+                    <div key={song._id} className="song-item-wrapper">
+                        <SongCard song={song} list={songs} />
                         {onAddSong && (
-                            <button
+                            <button 
                                 className="add-to-playlist-btn"
-                                type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    //'id' is null in your object, we MUST use 'old_id'
-                                    const songIdentifier = song.old_id || song.id;
-
-                                    if (!songIdentifier) {
-                                        console.error("No ID found for song:", song);
-                                        return;
-                                    }
-
-                                    console.log("Adding song with ID:", songIdentifier);
-                                    onAddSong(songIdentifier);
-                                }}
+                                onClick={() => onAddSong(song._id)}
                             >
                                 +
                             </button>
@@ -78,16 +70,16 @@ const Search = ({ isReadOnly = false, externalQuery = "", onAddSong = null }) =>
         </div>
     );
 
-    if (isReadOnly) return renderContent();
+    if (isReadOnly) return renderResults();
 
     return (
         <div className="app-container">
             <Navbar />
             <div className="content-container">
-                <Sidebar onToggle={(open) => setSidebarOpen(open)} />
-                <div className={`search-main ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-                    <h2 className="search-heading">Search Results for "{query}"</h2>
-                    {renderContent()}
+                <Sidebar />
+                <div className="search-main">
+                    <h2 className="search-heading">Results for "{query}"</h2>
+                    {renderResults()}
                 </div>
             </div>
         </div>
