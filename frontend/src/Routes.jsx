@@ -13,6 +13,7 @@ import AdminPage from "./Pages/admin/Dashboard/AdminPage";
 import UploadSong from "./Pages/user/UploadSong/UploadSong";
 import EditProfile from "./Pages/user/EditProfile/EditProfile";
 import PlaylistDetail from "./Pages/user/PlayList/ PlaylistDetail";
+import LikedSongs from "./Pages/user/Liked/LikedSongs";
 
 const getRoleFromToken = () => {
     const token = localStorage.getItem("token");
@@ -118,6 +119,14 @@ const AppRoutes = () => {
                 element={
                     <PrivateRoute>
                         <PlaylistDetail />
+                    </PrivateRoute>
+                }
+            />
+               <Route
+                path="/liked-songs"
+                element={
+                    <PrivateRoute>
+                        <LikedSongs />
                     </PrivateRoute>
                 }
             />

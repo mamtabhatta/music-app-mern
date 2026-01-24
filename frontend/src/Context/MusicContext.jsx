@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useRef } from "react";
+import React, { createContext, useState, useContext, useRef, useEffect } from "react";
 import { fetchMyPlaylists } from "../api/playlistApi";
 
 const MusicContext = createContext();
@@ -9,8 +9,29 @@ export const MusicProvider = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const [playlists, setPlaylists] = useState([]);
+    
+    const [likedSongs, setLikedSongs] = useState(() => {
+        const saved = localStorage.getItem("likedSongs");
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
+    }, [likedSongs]);
 
     const audioRef = useRef(new Audio());
+
+    const toggleLike = (song) => {
+        if (!song) return;
+        setLikedSongs((prev) => {
+            const isLiked = prev.some((s) => (s._id || s.id) === (song._id || song.id));
+            if (isLiked) {
+                return prev.filter((s) => (s._id || s.id) !== (song._id || song.id));
+            } else {
+                return [...prev, song];
+            }
+        });
+    };
 
     const fetchUserPlaylists = async () => {
         const token = localStorage.getItem("token");
@@ -56,7 +77,8 @@ export const MusicProvider = ({ children }) => {
     return (
         <MusicContext.Provider value={{
             currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong,
-            audioRef, songs: queue, playlists, setPlaylists, fetchUserPlaylists
+            audioRef, songs: queue, playlists, setPlaylists, fetchUserPlaylists,
+            likedSongs, toggleLike
         }}>
             {children}
         </MusicContext.Provider>

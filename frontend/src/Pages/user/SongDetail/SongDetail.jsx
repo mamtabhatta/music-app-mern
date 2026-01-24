@@ -10,11 +10,16 @@ import UpNextList from "../../../Components/Upnext/UpNextList";
 import "./SongDetail.css";
 
 const SongDetail = () => {
-    const { currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong, audioRef, songs = [] } = useMusic();
+    const {
+        currentSong, isPlaying, playSong, pauseSong, nextSong, prevSong,
+        audioRef, songs = [], likedSongs, toggleLike
+    } = useMusic();
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("0:00");
     const [duration, setDuration] = useState("0:00");
     const navigate = useNavigate();
+
+    const isLiked = likedSongs.some(s => (s._id || s.id) === (currentSong?._id || currentSong?.id));
 
     const formatTime = (time) => {
         if (!time || isNaN(time) || time === Infinity) return "0:00";
@@ -26,10 +31,8 @@ const SongDetail = () => {
     const syncWithAudio = useCallback(() => {
         const audio = audioRef.current;
         if (!audio) return;
-
         const total = audio.duration;
         const current = audio.currentTime;
-
         if (total && !isNaN(total)) {
             setProgress((current / total) * 100);
             setCurrentTime(formatTime(current));
@@ -40,14 +43,11 @@ const SongDetail = () => {
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
-
         audio.addEventListener("timeupdate", syncWithAudio);
         audio.addEventListener("loadedmetadata", syncWithAudio);
         audio.addEventListener("durationchange", syncWithAudio);
         audio.addEventListener("ended", nextSong);
-
         if (audio.readyState >= 1) syncWithAudio();
-
         return () => {
             audio.removeEventListener("timeupdate", syncWithAudio);
             audio.removeEventListener("loadedmetadata", syncWithAudio);
@@ -88,8 +88,11 @@ const SongDetail = () => {
                             <h2>{currentSong.artist}</h2>
                         </div>
                         <div className="header-actions">
-                            <FaMinusCircle className="minus-icon" />
-                            <FaHeart className="heart-icon active" />
+
+                            <FaHeart
+                                className={`heart-icon ${isLiked ? "active" : ""}`}
+                                onClick={() => toggleLike(currentSong)}
+                            />
                         </div>
                     </div>
 

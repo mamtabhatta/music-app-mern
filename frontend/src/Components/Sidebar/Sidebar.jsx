@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiSearch, FiPlus, FiMusic, FiTrash2 } from "react-icons/fi";
-import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft, FaHeart } from "react-icons/fa"; // Added FaHeart
 import { useNavigate } from "react-router-dom";
 import { createPlaylist, deletePlaylist } from "../../api/playlistApi";
 import { useMusic } from "../../Context/MusicContext";
@@ -12,8 +12,8 @@ const Sidebar = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     
-    //sidebar listens to the brain
-    const { playlists, setPlaylists, fetchUserPlaylists } = useMusic();
+    // likedSongs added to destructuring
+    const { playlists, setPlaylists, fetchUserPlaylists, likedSongs } = useMusic();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
@@ -82,12 +82,25 @@ const Sidebar = () => {
                         type="text"
                         placeholder="Search in Your Library"
                         value={search}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
             )}
 
             <ul className="playlist-list">
+                {/* Liked Songs Static Item */}
+                <li className="playlist-item liked-item" onClick={() => navigate("/liked-songs")}>
+                    <div className="playlist-img-sm liked-gradient">
+                        <FaHeart color="white" size={12} />
+                    </div>
+                    {!collapsed && (
+                        <div className="playlist-info-sm">
+                            <span className="p-name">Liked Songs</span>
+                            <span className="p-sub">Playlist • {likedSongs?.length || 0} songs</span>
+                        </div>
+                    )}
+                </li>
+
                 {isCreating && !collapsed && (
                     <li className="playlist-item creating">
                         <div className="playlist-img-sm"><FiMusic /></div>
@@ -114,7 +127,6 @@ const Sidebar = () => {
                             <>
                                 <div className="playlist-info-sm">
                                     <span className="p-name">{playlist.title}</span>
-                                    
                                     <span className="p-sub">Playlist • {playlist.songIds?.length || playlist.songs?.length || 0} songs</span>
                                 </div>
                                 <button className="delete-btn-sidebar" onClick={(e) => handleDelete(e, playlist._id || playlist.id)}>
