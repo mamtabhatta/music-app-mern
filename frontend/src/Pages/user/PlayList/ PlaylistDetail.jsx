@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { FaMusic } from "react-icons/fa";
+import axios from "axios";
+import { FaMusic, FaPlus } from "react-icons/fa";
 import { getPlaylistById, addSongToPlaylist, removeSongFromPlaylist } from "../../../api/playlistApi";
 import { useMusic } from "../../../Context/MusicContext";
 import Search from "../../../Components/Search/Search";
@@ -13,6 +14,7 @@ const PlaylistDetail = () => {
     const { playSong, fetchUserPlaylists } = useMusic();
     const [playlist, setPlaylist] = useState(null);
     const [playlistSongs, setPlaylistSongs] = useState([]);
+    const [recommendedSongs, setRecommendedSongs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
@@ -26,7 +28,14 @@ const PlaylistDetail = () => {
             const data = res.data;
             setPlaylist(data);
             setIsOwner(data.isOwner);
-            setPlaylistSongs(data.songs || data.songIds || []);
+            const currentSongs = data.songs || data.songIds || [];
+            setPlaylistSongs(currentSongs);
+            
+            const songsRes = await axios.get("http://localhost:5100/api/songs");
+            const allSongs = songsRes.data;
+            const existingIds = new Set(currentSongs.map(s => s._id || s.id));
+            const recs = allSongs.filter(s => !existingIds.has(s._id || s.id)).slice(3,10);
+            setRecommendedSongs(recs);
         } catch (err) {
             console.error(err);
         } finally {
@@ -145,6 +154,40 @@ const PlaylistDetail = () => {
                             )}
                         </tbody>
                     </table>
+
+                    {isOwner && recommendedSongs.length > 0 && (
+                        <div className="recommended-section">
+                            <h3>Recommended Songs</h3>
+                            <p className="rec-subtitle">Based on what's in this playlist</p>
+                            <div className="rec-list">
+                                {recommendedSongs.map((song) => (
+                                    <div 
+                                        key={song._id} 
+                                        className="rec-item"
+                                        onClick={() => playSong(song, recommendedSongs)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className="rec-info">
+                                            <img src={song.imageUrl || song.coverImageUrl} alt="" />
+                                            <div>
+                                                <p className="rec-title">{song.title}</p>
+                                                <p className="rec-artist">{song.artist}</p>
+                                            </div>
+                                        </div>
+                                        <button 
+                                            className="rec-add-btn" 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleAddSong(song._id);
+                                            }}
+                                        >
+                                            <FaPlus /> Add
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

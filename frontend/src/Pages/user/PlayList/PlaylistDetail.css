@@ -8,32 +8,55 @@
     color: var(--text-main);
     padding: 32px;
     overflow-y: auto;
-    /* Perfect fit: Viewport minus Navbar (85px) and Footer (90px) */
-    height: calc(100vh - var(--navbar-height) - var(--footer-height) - 32px);
+    /* This expands the box to fill the screen height minus the Navbar */
+    height: calc(100vh - var(--navbar-height) - 20px);
+    /* Removes the gap at the bottom */
+    margin-bottom: 0;
     display: flex;
     flex-direction: column;
+   flex-direction: column;
 }
+
+/* Ensure the scrollbar doesn't ruin the glass look */
+.playlist-detail-main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.playlist-detail-main::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.playlist-detail-main::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.playlist-detail-main::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
+
 .playlist-header {
     display: flex;
-    align-items: flex-end; /* Keeps text and image aligned at the bottom */
+    align-items: flex-end;
+    /* Keeps text and image aligned at the bottom */
     gap: 24px;
     padding: 20px 0 30px 0;
 }
 
 .playlist-cover {
     /* Made smaller to look more proportional */
-    width: 190px; 
+    width: 190px;
     height: 190px;
     min-width: 190px;
-    
+
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     /* Layered shadows for depth */
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(34, 211, 238, 0.05);
-    
+
     border-radius: 12px;
     border: 1px solid var(--glass-border);
     position: relative;
@@ -48,19 +71,20 @@
 
 .default-cover-icon {
     /* Scaled down to match new box size */
-    font-size: 70px; 
+    font-size: 70px;
     color: var(--accent-cyan);
     opacity: 0.3;
 }
 
 .header-text h1 {
     /* Slightly reduced font size to match the smaller cover */
-    font-size: 56px; 
+    font-size: 56px;
     margin: 0;
     font-weight: 800;
     letter-spacing: -2px;
     line-height: 1.1;
 }
+
 .playlist-badge {
     font-size: 16px;
     font-weight: 700;
@@ -102,7 +126,7 @@
     font-size: 14px;
     transition: all 0.2s ease;
     /* Added margin-bottom to create a gap between search bar and cards */
-    margin-bottom: 24px; 
+    margin-bottom: 24px;
     display: block;
 }
 
@@ -190,4 +214,90 @@
     background: transparent;
     color: var(--text-main);
     font-size: 20px;
+}
+
+.recommended-section {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.recommended-section h3 {
+    font-size: 24px;
+    margin-bottom: 4px;
+    color: var(--text-main);
+    padding-bottom: 40px;
+}
+
+.rec-subtitle {
+    color: var(--text-main);
+    opacity: 0.5;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.rec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rec-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.rec-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.rec-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.rec-info img {
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.rec-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.rec-artist {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.6;
+    color: var(--text-main);
+}
+
+.rec-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-main) !important;
+    padding: 6px 16px !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+}
+
+.rec-add-btn:hover {
+    background: var(--text-main) !important;
+    color: #000 !important;
+    transform: scale(1.05);
 }

@@ -16,7 +16,9 @@ const getAllUsers = async (req, res) => {
 
 const getPendingSongs = async (req, res) => {
     try {
-        const pendingSongs = await Song.find({ approved: { $ne: true } });
+        
+        const pendingSongs = await Song.find({ approved: { $ne: true } })
+                                     .populate('artistId', 'name'); 
         res.json({ pendingSongs });
     } catch (error) {
         res.status(500).json({ message: error.message });

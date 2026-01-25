@@ -66,7 +66,11 @@ const uploadSong = async (req, res) => {
 
         res.status(201).json({ message: "Upload successful", song });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("DETAILED UPLOAD ERROR:", error); // Check your terminal for this!
+        res.status(500).json({
+            message: error.message,
+            stack: error.stack // This will tell you the exact line number
+        });
     }
 };
 const getMyProfile = async (req, res) => {
