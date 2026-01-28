@@ -1,175 +1,142 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root {
+  --glass-bg: rgba(58, 58, 128, 0.349);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glow-cyan: rgba(34, 211, 238, 0.15);
+  --glow-purple: rgba(139, 92, 246, 0.15);
+  --accent-cyan: #c8eff5;
+  --text-main: #f8fafc;
+}
 
 .auth-page {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Uses a dark base to let your home page mesh/glows show through if transparent */
-    background: #050508; 
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+ background-color: radial-gradient(at 0% 0%, var(--glow-cyan) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--glow-purple) 0px, transparent 50%),
+    #050508;;
+  font-family: 'Inter', sans-serif;
 }
 
 .auth-card {
-    width: 100%;
-    max-width: 400px;
-    /* Matches the glass effect of your Home Sidebar/Cards */
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(35px) saturate(180%);
-    -webkit-backdrop-filter: blur(35px) saturate(180%);
-    border-radius: 28px;
-    padding: 50px 35px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-    text-align: center;
-    color: white;
+  display: flex;
+  width: 850px;
+  height: 500px;
+  background: rgba(88, 187, 226, 0.171);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
 }
 
-/* The Big Music Note Icon - Matched to Home Accent */
-.auth-card::before {
-    content: '♫';
-    display: block;
-    font-size: 70px;
-    margin-bottom: 15px;
-    color: var(--accent-cyan);
-    filter: drop-shadow(0 0 15px var(--glow-cyan));
-    opacity: 1;
+.auth-left {
+  flex: 1;
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, #9bd0e7 90%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #0f0f14;
 }
 
-.auth-card h2 {
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 35px;
-    text-align: center;
-    letter-spacing: -1px;
-    color: #fff;
+.auth-left img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.auth-left h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: 800;
+}
+
+.auth-right {
+  flex: 1.2;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+.auth-right h2 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  color: var(--accent-cyan);
 }
 
 .input-group {
-    position: relative;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
+  position: relative;
+  margin-bottom: 15px;
 }
 
 .input-group input {
-    width: 100%;
-    padding: 16px 16px 16px 50px;
-    /* Darker glass for inputs to create depth */
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
-    color: white;
-    font-size: 15px;
-    outline: none;
-    transition: all 0.3s ease;
+  width: 100%;
+  padding: 12px 15px 12px 40px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  color: var(--text-main);
+  outline: none;
 }
 
 .input-group input:focus {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 15px var(--glow-cyan);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px var(--glow-cyan);
 }
 
 .input-group .icon {
-    position: absolute;
-    left: 18px;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.input-group input:focus + .icon {
-    color: var(--accent-cyan);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-cyan);
 }
 
 .toggle-password {
-    position: absolute;
-    right: 18px;
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.4);
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
 }
 
-.toggle-password:hover {
-    color: var(--accent-cyan);
-}
-
-/* The White Action Button - Matches Home Button Style */
 .auth-btn {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 50px;
-    background: #ffffff;
-    color: #000;
-    font-weight: 800;
-    font-size: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.auth-btn:hover {
-    background: var(--accent-cyan);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px var(--glow-cyan);
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-cyan);
+  color: #0f0f14;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: opacity 0.2s;
 }
 
 .auth-btn:disabled {
-    opacity: 0.5;
-    background: #ccc;
-}
-
-/* Arrow indicator to match the screenshot */
-.auth-btn::after {
-    content: '›';
-    font-size: 24px;
-    line-height: 0;
-    margin-left: 4px;
-    margin-top: -2px;
-}
-
-.error-text {
-    background: rgba(255, 80, 80, 0.1);
-    color: #ff5050;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 80, 80, 0.2);
+  opacity: 0.5;
 }
 
 .switch-text {
-    margin-top: 30px;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 14px;
-    font-weight: 500;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #94a3b8;
 }
 
-.switch-text .link {
-    color: var(--accent-cyan);
-    text-decoration: none;
-    font-weight: 700;
-    margin-left: 5px;
-    transition: 0.3s;
+.link {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.switch-text .link:hover {
-    color: #fff;
-    text-shadow: 0 0 10px var(--glow-cyan);
+.error-text {
+  color: #f87171;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
 }

@@ -3,21 +3,21 @@ const router = express.Router();
 const {
     getAllUsers,
     getPendingSongs,
+    getAllSongs,
     approveSong,
+    updateSong,
     removeSong,
     removeUser,
-    removePost,
-    removeComment
 } = require("../controllers/adminController");
 const { protect } = require("../middlewares/authMiddleware");
 const { admin } = require("../middlewares/roleMiddleware");
 
 router.get("/users", protect, admin, getAllUsers);
 router.get("/songs/pending", protect, admin, getPendingSongs);
-router.put("/song/approve/:songId", protect, approveSong);
+router.get("/songs/all", protect, admin, getAllSongs);
+router.put("/song/approve/:songId", protect, admin, approveSong);
+router.put("/song/:songId", protect, admin, updateSong);
 router.delete("/song/:songId", protect, admin, removeSong);
 router.delete("/user/:userId", protect, admin, removeUser);
-router.delete("/post/:postId", protect, admin, removePost);
-router.delete("/comment/:commentId", protect, admin, removeComment);
 
 module.exports = router;

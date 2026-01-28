@@ -1,5 +1,5 @@
 import React from "react";
-import { Music, Users, LogOut, ShieldCheck, MessageSquare } from "lucide-react";
+import { Music, Users, LogOut, ShieldCheck, ListMusic } from "lucide-react";
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
     return (
@@ -14,19 +14,19 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
                     className={activeTab === "songs" ? "active" : ""}
                     onClick={() => setActiveTab("songs")}
                 >
-                    <Music size={20} /> Songs
+                    <Music size={20} /> Pending Songs
+                </button>
+                <button
+                    className={activeTab === "mod" ? "active" : ""}
+                    onClick={() => setActiveTab("mod")}
+                >
+                    <ListMusic size={20} /> All Songs
                 </button>
                 <button
                     className={activeTab === "users" ? "active" : ""}
                     onClick={() => setActiveTab("users")}
                 >
                     <Users size={20} /> Users
-                </button>
-                <button
-                    className={activeTab === "mod" ? "active" : ""}
-                    onClick={() => setActiveTab("mod")}
-                >
-                    <MessageSquare size={20} /> Moderation
                 </button>
             </nav>
 

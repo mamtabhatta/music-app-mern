@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Components/Sidebar";
 import SongsTab from "./Components/SongsTab";
 import UsersTab from "./Components/UsersTab";
+import ModerationTab from "./Components/ModerationTab";
 import "./AdminPage.css";
 
 const AdminPage = () => {
@@ -25,13 +26,13 @@ const AdminPage = () => {
 
             <main className="admin-main">
                 <header className="admin-header">
-                    <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management</h1>
+                    <h1>{activeTab === "mod" ? "Song Moderation" : activeTab.charAt(0).toUpperCase() + activeTab.slice(1) + " Management"}</h1>
                 </header>
 
                 <section className="admin-card">
                     {activeTab === "songs" && <SongsTab />}
                     {activeTab === "users" && <UsersTab />}
-                    {activeTab === "mod" && <div className="empty-msg">Moderation content coming soon.</div>}
+                    {activeTab === "mod" && <ModerationTab />}
                 </section>
             </main>
         </div>

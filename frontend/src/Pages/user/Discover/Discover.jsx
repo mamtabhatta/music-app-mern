@@ -38,7 +38,7 @@ const DiscoverPage = () => {
                 <main className="discover-main">
                     <div className="discover-content">
                         <header className="discover-header">
-                            <h2 className="discover-title">Artists to follow</h2>
+                            <h2 className="discover-title">Discover other users</h2>
                         </header>
 
                         {loading ? (
@@ -48,32 +48,34 @@ const DiscoverPage = () => {
                             </div>
                         ) : users.length > 0 ? (
                             <div className="artist-grid">
-                                {users.map((user) => (
-                                    <div 
-                                        key={user._id} 
-                                        className="artist-card"
-                                        onClick={() => navigate(`/profile/${user._id}`)}
-                                    >
-                                        <div className="artist-img-wrapper">
-                                            {user.profilePictureUrl ? (
-                                                <img
-                                                    src={user.profilePictureUrl}
-                                                    alt={user.name}
-                                                    className="artist-img"
-                                                />
-                                            ) : (
-                                                <FaUserCircle className="default-avatar-icon" />
-                                            )}
+                                {users
+                                    .filter((user) => user.role !== "admin")
+                                    .map((user) => (
+                                        <div 
+                                            key={user._id} 
+                                            className="artist-card"
+                                            onClick={() => navigate(`/profile/${user._id}`)}
+                                        >
+                                            <div className="artist-img-wrapper">
+                                                {user.profilePictureUrl ? (
+                                                    <img
+                                                        src={user.profilePictureUrl}
+                                                        alt={user.name}
+                                                        className="artist-img"
+                                                    />
+                                                ) : (
+                                                    <FaUserCircle className="default-avatar-icon" />
+                                                )}
+                                            </div>
+                                            <div className="artist-info">
+                                                <span className="artist-name">{user.name}</span>
+                                            </div>
                                         </div>
-                                        <div className="artist-info">
-                                            <span className="artist-name">{user.name}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                         ) : (
                             <div className="empty-state">
-                                <p>No artists found.</p>
+                                <p>No users found.</p>
                             </div>
                         )}
                     </div>

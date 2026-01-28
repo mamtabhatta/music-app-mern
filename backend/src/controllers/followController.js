@@ -3,8 +3,11 @@ const User = require("../models/user");
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({ _id: { $ne: req.user._id } })
-            .select("name email profilePictureUrl");
+        const users = await User.find({ 
+            _id: { $ne: req.user._id },
+            role: { $ne: "admin" } 
+        }).select("name email profilePictureUrl role");
+        
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -105,6 +108,6 @@ module.exports = {
     toggleFollow,
     getMyFollowing,
     getMyFollowers,
-    getFollowStatus, // Added this back to the exports
+    getFollowStatus, 
     getMyStats
 };

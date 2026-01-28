@@ -16,7 +16,6 @@ const uploadSong = async (req, res) => {
         const { title, artist, album, genre, duration } = req.body;
         const uploaderId = req.user._id;
 
-        // Function to handle "3:45" strings or raw numbers
         const parseDuration = (val) => {
             if (!val) return 0;
             if (typeof val === 'string' && val.includes(':')) {
@@ -66,13 +65,14 @@ const uploadSong = async (req, res) => {
 
         res.status(201).json({ message: "Upload successful", song });
     } catch (error) {
-        console.error("DETAILED UPLOAD ERROR:", error); // Check your terminal for this!
+        console.error("DETAILED UPLOAD ERROR:", error);
         res.status(500).json({
             message: error.message,
-            stack: error.stack // This will tell you the exact line number
+            stack: error.stack
         });
     }
 };
+
 const getMyProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select("-password");
@@ -84,7 +84,26 @@ const getMyProfile = async (req, res) => {
 
 const updateMyProfile = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.user._id, req.body, { new: true }).select("-password");
+        const updates = { ...req.body };
+
+        if (req.files && req.files.profilePicture) {
+            const file = req.files.profilePicture;
+            const fileName = `avatar_${req.user._id}_${Date.now()}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from("cover")
+                .upload(fileName, file.data, { 
+                    contentType: file.mimetype,
+                    upsert: true 
+                });
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage.from("cover").getPublicUrl(fileName);
+            updates.profilePictureUrl = data.publicUrl;
+        }
+
+        const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true }).select("-password");
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });

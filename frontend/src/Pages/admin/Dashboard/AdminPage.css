@@ -12,7 +12,9 @@
 .admin-container {
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-dark);
+  background-color: radial-gradient(at 0% 0%, var(--glow-cyan) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--glow-purple) 0px, transparent 50%),
+    #050508;
   color: var(--text-main);
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
@@ -245,4 +247,109 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+.moderation-container {
+  max-height: 75vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-cyan) rgba(255, 255, 255, 0.05);
+}
+
+.moderation-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.moderation-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.moderation-container::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 10px;
+  border: 2px solid #0b0b14;
+}
+
+.admin-table th {
+  position: sticky;
+  top: 0;
+  background: #0b0b14;
+  z-index: 10;
+  border-bottom: 1px solid var(--glass-border);
+}
+.actions-cell {
+  display: flex;
+  gap: 12px; /* Adjust this value to increase/decrease the space */
+  align-items: center;
+  justify-content: flex-start; /* Matches the left-alignment in your screenshot */
+}
+
+.btn-icon {
+  /* Ensuring buttons don't shrink */
+  flex-shrink: 0; 
+}
+.edit-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 180px;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.edit-input:focus {
+  border-color: var(--accent-cyan);
+  background: rgba(34, 211, 238, 0.05);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.badge.approved {
+  background: rgba(34, 211, 238, 0.1);
+  color: #22d3ee;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.2);
+}
+
+.badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  animation: badge-glow 2s infinite ease-in-out;
+}
+
+@keyframes badge-glow {
+  0% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.5);
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+}
+
+.badge svg {
+  filter: drop-shadow(0 0 2px currentColor);
 }

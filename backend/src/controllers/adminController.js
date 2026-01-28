@@ -112,39 +112,27 @@ const removeUser = async (req, res) => {
     }
 };
 
-const removePost = async (req, res) => {
+const getAllSongs = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const post = await Post.findById(postId);
-        if (!post) return res.status(404).json({ message: "Post not found" });
-        await Post.findByIdAndDelete(postId);
-        await AdminAction.create({
-            adminId: req.user._id,
-            targetType: "post",
-            targetId: post._id,
-            actionType: "remove",
-            reason: req.body?.reason || "Removed by admin",
-        });
-        res.json({ message: "Post removed successfully" });
+        const songs = await Song.find().populate('artistId', 'name');
+        res.json({ songs });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const removeComment = async (req, res) => {
+const updateSong = async (req, res) => {
     try {
-        const { commentId } = req.params;
-        const comment = await Comment.findById(commentId);
-        if (!comment) return res.status(404).json({ message: "Comment not found" });
-        await Comment.findByIdAndDelete(commentId);
-        await AdminAction.create({
-            adminId: req.user._id,
-            targetType: "comment",
-            targetId: comment._id,
-            actionType: "remove",
-            reason: req.body?.reason || "Removed by admin",
-        });
-        res.json({ message: "Comment removed by admin successfully" });
+        const { songId } = req.params;
+        const { artistName, genre } = req.body;
+        const song = await Song.findById(songId);
+        if (!song) return res.status(404).json({ message: "Song not found" });
+        song.genre = genre || song.genre;
+        if (artistName && song.artistId) {
+            await User.findByIdAndUpdate(song.artistId, { name: artistName });
+        }
+        await song.save();
+        res.json({ message: "Song updated successfully", song });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -153,9 +141,10 @@ const removeComment = async (req, res) => {
 module.exports = {
     getAllUsers,
     getPendingSongs,
+    getAllSongs, 
     approveSong,
+    updateSong, 
     removeSong,
     removeUser,
-    removePost,
-    removeComment
+    
 };

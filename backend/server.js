@@ -11,7 +11,6 @@ import songRoutes from "./src/routes/songRoutes.js";
 import followRoutes from "./src/routes/followRoutes.js";
 import playlistRoutes from "./src/routes/playlistRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
-import commentRoutes from "./src/routes/commentRoutes.js";
 
 import fileUpload from "express-fileupload";
 import cors from "cors";
@@ -40,7 +39,6 @@ app.use("/api/songs", songRoutes);
 app.use("/api/social", followRoutes);
 app.use("/api/playlist", playlistRoutes);
 app.use("/api/post", postRoutes);
-app.use("/api/comment", commentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
