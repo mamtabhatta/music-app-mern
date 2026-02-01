@@ -353,3 +353,101 @@
 .badge svg {
   filter: drop-shadow(0 0 2px currentColor);
 }
+.panel-wrapper {
+  padding: 40px;
+  background-color: #001d243d;
+  min-height: 70vh;
+  color: #f4f4f5;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.header-section {
+  margin-bottom: 50px;
+}
+
+.header-section h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, #ffffff, #a1a1aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-section p {
+  color: #71717a;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.hub-card {
+  background: rgba(22, 22, 24, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 35px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-card:hover {
+  transform: translateY(-8px);
+  background: rgba(28, 28, 31, 0.9);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.songs-hover:hover { border-color: #38bdf8; box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
+.users-hover:hover { border-color: #a78bfa; box-shadow: 0 0 20px rgba(167, 139, 250, 0.1); }
+.mod-hover:hover { border-color: #fb7185; box-shadow: 0 0 20px rgba(251, 113, 133, 0.1); }
+
+.icon-container {
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blue-theme { background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05)); color: #38bdf8; }
+.purple-theme { background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(167, 139, 250, 0.05)); color: #a78bfa; }
+.red-theme { background: linear-gradient(135deg, rgba(251, 113, 133, 0.2), rgba(251, 113, 133, 0.05)); color: #fb7185; }
+
+.info-stack {
+  flex: 1;
+}
+
+.label-text {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  display: block;
+}
+
+.value-text {
+  color: #a1a1aa;
+  font-size: 14px;
+  margin-top: 6px;
+  display: block;
+}
+
+.chevron {
+  opacity: 0.3;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hub-card:hover .chevron {
+  opacity: 1;
+  transform: translateX(5px);
+}

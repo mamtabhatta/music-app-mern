@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiSearch, FiPlus, FiMusic, FiTrash2 } from "react-icons/fi";
-import { FaChevronLeft, FaHeart } from "react-icons/fa"; // Added FaHeart
+import { FaChevronLeft, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { createPlaylist, deletePlaylist } from "../../api/playlistApi";
 import { useMusic } from "../../Context/MusicContext";
@@ -12,7 +12,6 @@ const Sidebar = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     
-    // likedSongs added to destructuring
     const { playlists, setPlaylists, fetchUserPlaylists, likedSongs } = useMusic();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
@@ -88,18 +87,19 @@ const Sidebar = () => {
             )}
 
             <ul className="playlist-list">
-                {/* Liked Songs Static Item */}
-                <li className="playlist-item liked-item" onClick={() => navigate("/liked-songs")}>
-                    <div className="playlist-img-sm liked-gradient">
-                        <FaHeart color="white" size={12} />
-                    </div>
-                    {!collapsed && (
-                        <div className="playlist-info-sm">
-                            <span className="p-name">Liked Songs</span>
-                            <span className="p-sub">Playlist • {likedSongs?.length || 0} songs</span>
+                {(!search || "liked songs".includes(search.toLowerCase())) && (
+                    <li className="playlist-item liked-item" onClick={() => navigate("/liked-songs")}>
+                        <div className="playlist-img-sm liked-gradient">
+                            <FaHeart color="white" size={12} />
                         </div>
-                    )}
-                </li>
+                        {!collapsed && (
+                            <div className="playlist-info-sm">
+                                <span className="p-name">Liked Songs</span>
+                                <span className="p-sub">Playlist • {likedSongs?.length || 0} songs</span>
+                            </div>
+                        )}
+                    </li>
+                )}
 
                 {isCreating && !collapsed && (
                     <li className="playlist-item creating">

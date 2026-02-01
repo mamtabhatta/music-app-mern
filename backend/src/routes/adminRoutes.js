@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
+    
     getAllUsers,
     getPendingSongs,
     getAllSongs,
@@ -11,7 +12,6 @@ const {
 } = require("../controllers/adminController");
 const { protect } = require("../middlewares/authMiddleware");
 const { admin } = require("../middlewares/roleMiddleware");
-
 router.get("/users", protect, admin, getAllUsers);
 router.get("/songs/pending", protect, admin, getPendingSongs);
 router.get("/songs/all", protect, admin, getAllSongs);

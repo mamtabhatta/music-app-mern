@@ -11,10 +11,6 @@
 .profile-page {
   height: 100vh;
   overflow: hidden;
-  background: 
-    radial-gradient(at 0% 0%, var(--glow-cyan) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, var(--glow-purple) 0px, transparent 50%),
-    #050508; 
   color: var(--text-main);
   font-family: 'Inter', sans-serif;
   display: flex;
@@ -49,17 +45,12 @@
   align-items: center;
   max-height: 90vh;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-cyan) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .profile-card::-webkit-scrollbar {
-  width: 5px;
-}
-
-.profile-card::-webkit-scrollbar-thumb {
-  background: var(--accent-cyan);
-  border-radius: 10px;
+  display: none;
 }
 
 .card-header {
@@ -145,7 +136,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
 }
 
@@ -156,25 +147,50 @@
   color: #000;
   border: none;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: 0.2s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2);
 }
 
 .action-btn.outline {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   color: #fff;
   border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .action-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
   filter: brightness(1.1);
+}
+
+.action-btn.outline:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+}
+
+.action-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  box-shadow: 0 0 20px 2px var(--accent-cyan);
+  z-index: -1;
+}
+
+.action-btn:hover::after {
+  opacity: 0.3;
 }
 
 .playlist-grid-section {

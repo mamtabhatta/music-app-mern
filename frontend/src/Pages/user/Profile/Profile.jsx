@@ -103,8 +103,8 @@ const Profile = () => {
       <main className="main-content">
         <div className="profile-card">
           <div className="card-header">
-            <FaArrowLeft className="back-icon" onClick={() => navigate("/")} />
-            <FaEllipsisH className="more-btn" />
+            {/* <FaArrowLeft className="back-icon" onClick={() => navigate("/")} /> */}
+            {/* <FaEllipsisH className="more-btn" /> */}
           </div>
 
           <div className="avatar-container">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
     FaPlay, FaPause, FaStepForward, FaStepBackward,
-    FaHeart, FaMinusCircle, FaRandom, FaRedo,
+    FaHeart, FaRandom, FaRedo,
     FaChevronDown, FaEllipsisH
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -16,28 +16,35 @@ const SongDetail = () => {
     } = useMusic();
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState("0:00");
-    const [duration, setDuration] = useState("0:00");
     const navigate = useNavigate();
 
     const isLiked = likedSongs.some(s => (s._id || s.id) === (currentSong?._id || currentSong?.id));
 
     const formatTime = (time) => {
         if (!time || isNaN(time) || time === Infinity) return "0:00";
-        const mins = Math.floor(time / 60);
-        const secs = Math.floor(time % 60);
+        const roundedTime = Math.floor(time);
+        const mins = Math.floor(roundedTime / 60);
+        const secs = roundedTime % 60;
         return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    };
+
+    const updateSliderColor = (val) => {
+        const slider = document.querySelector('.progress-slider');
+        if (slider) {
+            slider.style.setProperty('--progress-percent', `${val}%`);
+        }
     };
 
     const syncWithAudio = useCallback(() => {
         const audio = audioRef.current;
         if (!audio) return;
-        const total = audio.duration;
-        const current = audio.currentTime;
-        if (total && !isNaN(total)) {
-            setProgress((current / total) * 100);
-            setCurrentTime(formatTime(current));
-            setDuration(formatTime(total));
-        }
+        const cur = audio.currentTime || 0;
+        const dur = audio.duration || 0;
+        const val = dur > 0 ? (cur / dur) * 100 : 0;
+        
+        setProgress(val);
+        setCurrentTime(formatTime(cur));
+        updateSliderColor(val);
     }, [audioRef]);
 
     useEffect(() => {
@@ -57,10 +64,12 @@ const SongDetail = () => {
     }, [audioRef, currentSong, nextSong, syncWithAudio]);
 
     const handleSeek = (e) => {
-        if (!audioRef.current || !audioRef.current.duration) return;
-        const seekTime = (e.target.value / 100) * audioRef.current.duration;
-        audioRef.current.currentTime = seekTime;
-        setProgress(e.target.value);
+        const audio = audioRef.current;
+        if (!audio || !audio.duration) return;
+        const val = parseFloat(e.target.value);
+        audio.currentTime = (val / 100) * audio.duration;
+        setProgress(val);
+        updateSliderColor(val);
     };
 
     if (!currentSong) return null;
@@ -70,7 +79,7 @@ const SongDetail = () => {
             <div className="header-nav">
                 <button className="nav-btn" onClick={() => navigate(-1)}><FaChevronDown /></button>
                 <div className="playing-from">
-                    <p>PLAYING FROM PLAYLIST</p>
+                    <p>NOW PLAYING</p>
                     <span>{currentSong.artist} Radio</span>
                 </div>
                 <button className="nav-btn"><FaEllipsisH /></button>
@@ -79,6 +88,7 @@ const SongDetail = () => {
             <div className="content-wrapper">
                 <div className="main-player-view">
                     <div className="cover-container">
+                        <div className="glass-overlay"></div>
                         <img src={currentSong.coverImageUrl || currentSong.imageUrl} alt={currentSong.title} />
                     </div>
 
@@ -88,7 +98,6 @@ const SongDetail = () => {
                             <h2>{currentSong.artist}</h2>
                         </div>
                         <div className="header-actions">
-
                             <FaHeart
                                 className={`heart-icon ${isLiked ? "active" : ""}`}
                                 onClick={() => toggleLike(currentSong)}
@@ -97,11 +106,23 @@ const SongDetail = () => {
                     </div>
 
                     <div className="controls-section">
+                        <div className="visualizer">
+                            {[...Array(20)].map((_, i) => (
+                                <div key={i} className={`bar ${isPlaying ? "animating" : ""}`} />
+                            ))}
+                        </div>
                         <div className="slider-box">
-                            <input type="range" className="progress-slider" value={progress} onChange={handleSeek} min="0" max="100" />
+                            <input 
+                                type="range" 
+                                className="progress-slider" 
+                                value={progress} 
+                                onChange={handleSeek} 
+                                min="0" 
+                                max="100" 
+                                step="0.1"
+                            />
                             <div className="time-labels">
                                 <span>{currentTime}</span>
-                                <span>{duration === "0:00" ? "..." : duration}</span>
                             </div>
                         </div>
 
